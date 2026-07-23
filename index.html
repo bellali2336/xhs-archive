@@ -128,7 +128,7 @@
       <div class="hero-content">
         <div class="hero-badge">小红书收藏 · 归档</div>
         <h1 class="hero-title">我的小红书收藏</h1>
-        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 12:38</div>
+        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 12:50</div>
         <div class="hero-secs"><button class="chip chip-parent active" data-val="全部" onclick="setParent('全部')">全部</button><button class="chip chip-parent" data-val="代号鸢" onclick="setParent('代号鸢')">代号鸢</button><button class="chip chip-parent" data-val="陆沉" onclick="setParent('陆沉')">陆沉</button>
           <div class="hero-children" id="heroChildren" style="display:none"></div>
         </div>
@@ -154,7 +154,7 @@
       <div class="cover-inner">
         <div class="badge">小红书收藏 · 归档文档</div>
         <h1>我的小红书收藏</h1>
-        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 12:38</div>
+        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 12:50</div>
         <div class="cmeta2">分区：代号鸢 11 · 陆沉 1</div>
         <div class="ctip">← → 翻页 · 点目录直达 · 顶部按「分区」筛选 · 右上角可切「连续浏览」· 打印即存为 PDF</div>
         <nav class="toc">
@@ -615,12 +615,16 @@
       var cc = document.getElementById(id);
       if (!cc) return;
       if (!show) { cc.style.display = 'none'; cc.innerHTML = ''; return; }
-      var html = '<button class="chip ' + (curChild === '__all__' ? 'active' : '') + '" onclick="setChild(\'__all__\')">全部</button>';
-      CHILDREN[curParent].forEach(function(ch) {
-        html += '<button class="chip ' + (curChild === ch ? 'active' : '') + '" onclick="setChild(\' + ch + '\')">' + ch + '</button>';
-      });
-      cc.innerHTML = html;
+      var btns = [{label:'全部', val:'__all__'}];
+      CHILDREN[curParent].forEach(function(ch){ btns.push({label:ch, val:ch}); });
+      cc.innerHTML = btns.map(function(b){
+        var act = (b.val === curChild) ? ' active' : '';
+        return '<button class="chip'+act+'" data-child="'+b.val+'">'+b.label+'</button>';
+      }).join('');
       cc.style.display = '';
+      Array.from(cc.querySelectorAll('button')).forEach(function(btn){
+        btn.addEventListener('click', function(){ setChild(btn.getAttribute('data-child')); scrollToReader(); });
+      });
     });
   }
   function render() {
