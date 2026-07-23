@@ -76,7 +76,7 @@
   /* ===== 全屏首页 hero ===== */
   .hero { position:relative; min-height:100vh; min-height:100svh; display:flex; align-items:center; justify-content:center; overflow:hidden; }
   .hero-bg { position:absolute; inset:0; background:#2b2f36 center/cover no-repeat; transition:background-image .8s ease; }
-  .hero-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,.55)); }
+  .hero-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,.55)); pointer-events:none; }
   .hero-content { position:relative; text-align:center; color:#fff; padding:24px; max-width:680px; }
   .hero-badge { display:inline-block; font-size:13px; letter-spacing:2px; background:rgba(255,255,255,.18);
     padding:6px 16px; border-radius:999px; margin-bottom:18px; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
@@ -123,8 +123,8 @@
       <div class="hero-content">
         <div class="hero-badge">小红书收藏 · 归档</div>
         <h1 class="hero-title">我的小红书收藏</h1>
-        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 11:00</div>
-        <div class="hero-secs"><button class="chip active" onclick="setFilter('全部');scrollToReader()">全部</button><button class="chip" onclick="setFilter("\u4ee3\u53f7\u9e22");scrollToReader()">代号鸢</button><button class="chip" onclick="setFilter("\u9646\u6c89");scrollToReader()">陆沉</button></div>
+        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 11:27</div>
+        <div class="hero-secs"><button class="chip active" onclick="setFilter('全部');scrollToReader()">全部</button><button class="chip" onclick="setFilter('代号鸢');scrollToReader()">代号鸢</button><button class="chip" onclick="setFilter('陆沉');scrollToReader()">陆沉</button></div>
         <button class="hero-btn" onclick="scrollToReader()">开始阅读 ↓</button>
       </div>
       <div class="hero-credit">壁纸每日自动切换</div>
@@ -146,7 +146,7 @@
       <div class="cover-inner">
         <div class="badge">小红书收藏 · 归档文档</div>
         <h1>我的小红书收藏</h1>
-        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 11:00</div>
+        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 11:27</div>
         <div class="cmeta2">分区：代号鸢 11 · 陆沉 1</div>
         <div class="ctip">← → 翻页 · 点目录直达 · 顶部按「分区」筛选 · 右上角可切「连续浏览」· 打印即存为 PDF</div>
         <nav class="toc">
