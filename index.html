@@ -27,6 +27,11 @@
   .chip { font:inherit; font-size:13px; border:1px solid var(--line); background:#fff; color:var(--sub);
     padding:5px 14px; border-radius:999px; cursor:pointer; }
   .chip.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .chips-parent { width:100%; display:flex; gap:8px; flex-wrap:wrap; }
+  .chips-child { width:100%; display:flex; gap:8px; flex-wrap:wrap; }
+  .hero-children { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+  .toc-sub { margin:2px 0 8px 12px; }
+  .toc-sub-h { font-size:12px; color:var(--sub); margin:4px 0 4px; }
   .stage { max-width:760px; margin:0 auto; padding:24px 18px 120px; }
   .page { display:none; background:var(--paper); border:1px solid var(--line); border-radius:18px;
     padding:28px 30px; box-shadow:0 2px 10px rgba(0,0,0,.04); margin-bottom:24px; }
@@ -123,8 +128,10 @@
       <div class="hero-content">
         <div class="hero-badge">小红书收藏 · 归档</div>
         <h1 class="hero-title">我的小红书收藏</h1>
-        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 11:52</div>
-        <div class="hero-secs"><button class="chip active" onclick="setFilter('全部');scrollToReader()">全部</button><button class="chip" onclick="setFilter('代号鸢-解析');scrollToReader()">代号鸢-解析</button><button class="chip" onclick="setFilter('陆沉');scrollToReader()">陆沉</button><button class="chip" onclick="setFilter('代号鸢-同人');scrollToReader()">代号鸢-同人</button></div>
+        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 12:38</div>
+        <div class="hero-secs"><button class="chip chip-parent active" data-val="全部" onclick="setParent('全部')">全部</button><button class="chip chip-parent" data-val="代号鸢" onclick="setParent('代号鸢')">代号鸢</button><button class="chip chip-parent" data-val="陆沉" onclick="setParent('陆沉')">陆沉</button>
+          <div class="hero-children" id="heroChildren" style="display:none"></div>
+        </div>
         <button class="hero-btn" onclick="scrollToReader()">开始阅读 ↓</button>
       </div>
       <div class="hero-credit">壁纸每日自动切换</div>
@@ -138,7 +145,8 @@
   <button class="flip-only" onclick="home()">目录</button>
 </div>
 <div class="secbar">
-  <button class="chip active" onclick="setFilter('全部');scrollToReader()">全部</button><button class="chip" onclick="setFilter('代号鸢-解析');scrollToReader()">代号鸢-解析</button><button class="chip" onclick="setFilter('陆沉');scrollToReader()">陆沉</button><button class="chip" onclick="setFilter('代号鸢-同人');scrollToReader()">代号鸢-同人</button>
+  <div class="chips-parent"><button class="chip chip-parent active" data-val="全部" onclick="setParent('全部')">全部</button><button class="chip chip-parent" data-val="代号鸢" onclick="setParent('代号鸢')">代号鸢</button><button class="chip chip-parent" data-val="陆沉" onclick="setParent('陆沉')">陆沉</button></div>
+  <div class="chips-child" id="chipsChild" style="display:none"></div>
 </div>
 <main class="stage">
 
@@ -146,12 +154,12 @@
       <div class="cover-inner">
         <div class="badge">小红书收藏 · 归档文档</div>
         <h1>我的小红书收藏</h1>
-        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 11:52</div>
-        <div class="cmeta2">分区：代号鸢-解析 8 · 陆沉 1 · 代号鸢-同人 3</div>
+        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 12:38</div>
+        <div class="cmeta2">分区：代号鸢 11 · 陆沉 1</div>
         <div class="ctip">← → 翻页 · 点目录直达 · 顶部按「分区」筛选 · 右上角可切「连续浏览」· 打印即存为 PDF</div>
         <nav class="toc">
           <div class="toc-h">目录（按分区）</div>
-          <div class="toc-sec"><div class="toc-sec-h"><span>代号鸢-解析</span><span class="cnt">8 篇</span></div><ol><li><a href="#" onclick="jumpTo(1)"><span class="num">1</span><span class="t">和老广的这段月下对谈可以封神了</span><span class="a">誰來假裝妥協心不對口</span></a></li><li><a href="#" onclick="jumpTo(2)"><span class="num">2</span><span class="t">一张图了解代号鸢三周年在讲什么</span><span class="a">灼爻</span></a></li><li><a href="#" onclick="jumpTo(3)"><span class="num">3</span><span class="t">一棵神树的起源、演变与新生</span><span class="a">爱穿老式布鞋</span></a></li><li><a href="#" onclick="jumpTo(5)"><span class="num">5</span><span class="t">【老广存档】爹咱一定要走精神病路线吗？</span><span class="a">Sopii</span></a></li><li><a href="#" onclick="jumpTo(7)"><span class="num">7</span><span class="t">至此，张邈的人设，安稳落地，落地生花</span><span class="a">特洛伊胖木马</span></a></li><li><a href="#" onclick="jumpTo(8)"><span class="num">8</span><span class="t">无tag不想引发争论记录一点想法</span><span class="a">亥时雾</span></a></li><li><a href="#" onclick="jumpTo(9)"><span class="num">9</span><span class="t">鸟，你有如此权威的文案怎么样都会成功的</span><span class="a">天杀的我要报官</span></a></li><li><a href="#" onclick="jumpTo(10)"><span class="num">10</span><span class="t">时至今日我们仍不知道鸟的文案到底多有文华</span><span class="a">天杀的我要报官</span></a></li></ol></div><div class="toc-sec"><div class="toc-sec-h"><span>陆沉</span><span class="cnt">1 篇</span></div><ol><li><a href="#" onclick="jumpTo(4)"><span class="num">4</span><span class="t">她扁扁的趴在我怀里嘀咕那面落地窗把她压成了两块扁扁的雪饼。她总在结束后出现很多天</span><span class="a">Hummingbird</span></a></li></ol></div><div class="toc-sec"><div class="toc-sec-h"><span>代号鸢-同人</span><span class="cnt">3 篇</span></div><ol><li><a href="#" onclick="jumpTo(6)"><span class="num">6</span><span class="t">陈纪有时也会看着别人家的明艳小妻子晃神</span><span class="a">卑微狗皇帝闭门思过</span></a></li><li><a href="#" onclick="jumpTo(11)"><span class="num">11</span><span class="t">细思极恐 满宠没否认自己是抓心哥</span><span class="a">小红薯635157C4</span></a></li><li><a href="#" onclick="jumpTo(12)"><span class="num">12</span><span class="t">广陵王是满宠的观音土.</span><span class="a">小红薯635157C4</span></a></li></ol></div>
+          <div class="toc-sec"><div class="toc-sec-h"><span>代号鸢</span><span class="cnt">11 篇</span></div><div class="toc-sub"><div class="toc-sub-h">解析 <span class="cnt">8 篇</span></div><ol><li><a href="#" onclick="jumpTo(1)"><span class="num">1</span><span class="t">和老广的这段月下对谈可以封神了</span><span class="a">誰來假裝妥協心不對口</span></a></li><li><a href="#" onclick="jumpTo(2)"><span class="num">2</span><span class="t">一张图了解代号鸢三周年在讲什么</span><span class="a">灼爻</span></a></li><li><a href="#" onclick="jumpTo(3)"><span class="num">3</span><span class="t">一棵神树的起源、演变与新生</span><span class="a">爱穿老式布鞋</span></a></li><li><a href="#" onclick="jumpTo(5)"><span class="num">5</span><span class="t">【老广存档】爹咱一定要走精神病路线吗？</span><span class="a">Sopii</span></a></li><li><a href="#" onclick="jumpTo(7)"><span class="num">7</span><span class="t">至此，张邈的人设，安稳落地，落地生花</span><span class="a">特洛伊胖木马</span></a></li><li><a href="#" onclick="jumpTo(8)"><span class="num">8</span><span class="t">无tag不想引发争论记录一点想法</span><span class="a">亥时雾</span></a></li><li><a href="#" onclick="jumpTo(9)"><span class="num">9</span><span class="t">鸟，你有如此权威的文案怎么样都会成功的</span><span class="a">天杀的我要报官</span></a></li><li><a href="#" onclick="jumpTo(10)"><span class="num">10</span><span class="t">时至今日我们仍不知道鸟的文案到底多有文华</span><span class="a">天杀的我要报官</span></a></li></ol></div><div class="toc-sub"><div class="toc-sub-h">同人 <span class="cnt">3 篇</span></div><ol><li><a href="#" onclick="jumpTo(6)"><span class="num">6</span><span class="t">陈纪有时也会看着别人家的明艳小妻子晃神</span><span class="a">卑微狗皇帝闭门思过</span></a></li><li><a href="#" onclick="jumpTo(11)"><span class="num">11</span><span class="t">细思极恐 满宠没否认自己是抓心哥</span><span class="a">小红薯635157C4</span></a></li><li><a href="#" onclick="jumpTo(12)"><span class="num">12</span><span class="t">广陵王是满宠的观音土.</span><span class="a">小红薯635157C4</span></a></li></ol></div></div><div class="toc-sec"><div class="toc-sec-h"><span>陆沉</span><span class="cnt">1 篇</span></div><ol><li><a href="#" onclick="jumpTo(4)"><span class="num">4</span><span class="t">她扁扁的趴在我怀里嘀咕那面落地窗把她压成了两块扁扁的雪饼。她总在结束后出现很多天</span><span class="a">Hummingbird</span></a></li></ol></div>
         </nav>
       </div>
     </section>
@@ -580,13 +588,40 @@
     else window.scrollTo({ top:0, behavior:'smooth' });
   }
   var allPages = Array.from(document.querySelectorAll('.page'));
-  var curFilter = '全部';
+  var CHILDREN = {"代号鸢": ["解析", "同人"]};
+  var curParent = '全部';
+  var curChild = '__all__';
   var pos = 0;
   var mode = 'flip';
   var firstRender = true;
+  var suppressScroll = false;
+  function parentOf(sec) { var i = sec.indexOf('-'); return i >= 0 ? sec.slice(0, i) : sec; }
+  function childOf(sec) { var i = sec.indexOf('-'); return i >= 0 ? sec.slice(i + 1) : ''; }
   function visibleList() {
-    if (curFilter === '全部') return allPages;
-    return allPages.filter(function(p) { return p.dataset.section === curFilter; });
+    return allPages.filter(function(p) {
+      if (curParent === '全部') return true;
+      var sec = p.dataset.section;
+      if (parentOf(sec) !== curParent) return false;
+      if (curChild !== '__all__' && childOf(sec) !== curChild) return false;
+      return true;
+    });
+  }
+  function renderChips() {
+    document.querySelectorAll('.chip-parent').forEach(function(c) {
+      c.classList.toggle('active', c.getAttribute('data-val') === curParent);
+    });
+    var show = (curParent !== '全部') && CHILDREN[curParent] && CHILDREN[curParent].length > 0;
+    ['heroChildren', 'chipsChild'].forEach(function(id) {
+      var cc = document.getElementById(id);
+      if (!cc) return;
+      if (!show) { cc.style.display = 'none'; cc.innerHTML = ''; return; }
+      var html = '<button class="chip ' + (curChild === '__all__' ? 'active' : '') + '" onclick="setChild(\'__all__\')">全部</button>';
+      CHILDREN[curParent].forEach(function(ch) {
+        html += '<button class="chip ' + (curChild === ch ? 'active' : '') + '" onclick="setChild(\' + ch + '\')">' + ch + '</button>';
+      });
+      cc.innerHTML = html;
+      cc.style.display = '';
+    });
   }
   function render() {
     var vis = visibleList();
@@ -601,11 +636,11 @@
     var ind = document.getElementById('indicator');
     var curp = vis[pos];
     if (!curp) ind.textContent = '';
-    else if (curFilter === '全部' && (+curp.dataset.i) === 0) ind.textContent = '封面';
+    else if (curParent === '全部' && (+curp.dataset.i) === 0) ind.textContent = '封面';
     else ind.textContent = (pos + 1) + ' / ' + vis.length;
     if (mode === 'flip') {
       if (firstRender) { firstRender = false; }
-      else {
+      else if (!suppressScroll) {
         var ap = vis[pos];
         if (ap) {
           var y = ap.getBoundingClientRect().top + window.pageYOffset - 120;
@@ -621,13 +656,11 @@
   }
   function prev() { if (mode === 'flip') { pos--; render(); } }
   function next() { if (mode === 'flip') { pos++; render(); } }
-  function jumpTo(i) { setFilter('全部'); var vis = visibleList(); var idx = vis.findIndex(function(p) { return (+p.dataset.i) === i; }); pos = idx; render(); }
-  function setFilter(f) {
-    curFilter = f;
-    document.querySelectorAll('.chip').forEach(function(c) { c.classList.toggle('active', c.textContent === f); });
-    pos = 0; render();
-  }
-  function home() { setFilter('全部'); pos = 0; render(); }
+  function setParent(p) { curParent = p; curChild = '__all__'; renderChips(); pos = 0; suppressScroll = true; render(); scrollToReader(); suppressScroll = false; }
+  function setChild(c) { curChild = c; renderChips(); pos = 0; suppressScroll = true; render(); scrollToReader(); suppressScroll = false; }
+  function resetFilter() { curParent = '全部'; curChild = '__all__'; renderChips(); }
+  function jumpTo(i) { resetFilter(); var vis = visibleList(); var idx = vis.findIndex(function(p) { return (+p.dataset.i) === i; }); pos = idx; render(); }
+  function home() { resetFilter(); pos = 0; render(); }
   function toggleMode() {
     mode = (mode === 'flip') ? 'scroll' : 'flip';
     document.body.classList.toggle('mode-scroll', mode === 'scroll');
@@ -643,6 +676,7 @@
     if (e.key === 'ArrowLeft') prev();
     if (e.key === 'ArrowRight') next();
   });
+  renderChips();
   render();
 </script>
 </body>
