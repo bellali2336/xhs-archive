@@ -123,7 +123,7 @@
       <div class="hero-content">
         <div class="hero-badge">小红书收藏 · 归档</div>
         <h1 class="hero-title">我的小红书收藏</h1>
-        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 11:33</div>
+        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 11:38</div>
         <div class="hero-secs"><button class="chip active" onclick="setFilter('全部');scrollToReader()">全部</button><button class="chip" onclick="setFilter('代号鸢');scrollToReader()">代号鸢</button><button class="chip" onclick="setFilter('陆沉');scrollToReader()">陆沉</button></div>
         <button class="hero-btn" onclick="scrollToReader()">开始阅读 ↓</button>
       </div>
@@ -146,7 +146,7 @@
       <div class="cover-inner">
         <div class="badge">小红书收藏 · 归档文档</div>
         <h1>我的小红书收藏</h1>
-        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 11:33</div>
+        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 11:38</div>
         <div class="cmeta2">分区：代号鸢 11 · 陆沉 1</div>
         <div class="ctip">← → 翻页 · 点目录直达 · 顶部按「分区」筛选 · 右上角可切「连续浏览」· 打印即存为 PDF</div>
         <nav class="toc">
@@ -583,6 +583,7 @@
   var curFilter = '全部';
   var pos = 0;
   var mode = 'flip';
+  var firstRender = true;
   function visibleList() {
     if (curFilter === '全部') return allPages;
     return allPages.filter(function(p) { return p.dataset.section === curFilter; });
@@ -602,7 +603,16 @@
     if (!curp) ind.textContent = '';
     else if (curFilter === '全部' && (+curp.dataset.i) === 0) ind.textContent = '封面';
     else ind.textContent = (pos + 1) + ' / ' + vis.length;
-    if (mode === 'flip') window.scrollTo({ top:0, behavior:'smooth' });
+    if (mode === 'flip') {
+      if (firstRender) { firstRender = false; }
+      else {
+        var ap = vis[pos];
+        if (ap) {
+          var y = ap.getBoundingClientRect().top + window.pageYOffset - 120;
+          window.scrollTo({ top:y, behavior:'smooth' });
+        }
+      }
+    }
   }
   function show(i) {
     var vis = visibleList();
