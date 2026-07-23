@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的小红书收藏 · 代号鸢</title>
+<style>
+  :root {
+    --bg:#f4f4f6; --paper:#fff; --ink:#1f2329; --sub:#8a8f99;
+    --line:#e9e9ee; --accent:#ff2e4d; --chip:#f1f2f4;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; }
+  .toolbar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:10px;
+    padding:10px 16px; background:rgba(255,255,255,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line); }
+  .toolbar .ttl { font-weight:700; font-size:14px; margin-right:auto; color:var(--ink);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:30vw; }
+  .toolbar button { font:inherit; font-size:13px; border:1px solid var(--line); background:#fff;
+    color:var(--ink); padding:6px 12px; border-radius:999px; cursor:pointer; }
+  .toolbar button:hover { border-color:var(--accent); color:var(--accent); }
+  #indicator { font-size:13px; color:var(--sub); min-width:64px; text-align:center; }
+  .secbar { position:sticky; top:49px; z-index:19; display:flex; gap:8px; flex-wrap:wrap;
+    padding:8px 16px; background:rgba(255,255,255,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line); }
+  .chip { font:inherit; font-size:13px; border:1px solid var(--line); background:#fff; color:var(--sub);
+    padding:5px 14px; border-radius:999px; cursor:pointer; }
+  .chip.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .stage { max-width:760px; margin:0 auto; padding:24px 18px 120px; }
+  .page { display:none; background:var(--paper); border:1px solid var(--line); border-radius:18px;
+    padding:28px 30px; box-shadow:0 2px 10px rgba(0,0,0,.04); margin-bottom:24px; }
+  .page.active { display:block; }
+  body.mode-scroll .page:not(.vishide) { display:block; }
+  .cover .cover-inner { text-align:center; padding:30px 10px; }
+  .badge { display:inline-block; font-size:12px; color:var(--accent); background:#fff0f2;
+    padding:4px 12px; border-radius:999px; margin-bottom:14px; }
+  .cover h1 { font-size:30px; margin:0 0 10px; }
+  .cmeta { color:var(--sub); font-size:14px; }
+  .cmeta2 { color:var(--sub); font-size:13px; margin-top:6px; }
+  .ctip { color:var(--sub); font-size:12px; margin:14px 0 22px; }
+  .toc { text-align:left; max-width:480px; margin:0 auto; background:var(--chip);
+    border-radius:14px; padding:16px 20px; }
+  .toc-h { font-size:13px; color:var(--sub); margin-bottom:10px; font-weight:600; }
+  .toc-sec { margin-bottom:10px; }
+  .toc-sec-h { font-size:13px; color:var(--ink); font-weight:700; margin:6px 0 6px;
+    display:flex; justify-content:space-between; align-items:baseline; }
+  .toc-sec-h .cnt { color:var(--sub); font-weight:400; font-size:12px; }
+  .toc ol { margin:0; padding:0; list-style:none; }
+  .toc a { display:flex; gap:10px; align-items:baseline; text-decoration:none; color:var(--ink);
+    padding:6px 8px; border-radius:8px; }
+  .toc a:hover { background:#fff; }
+  .toc .num { flex:0 0 auto; height:22px; min-width:22px; border-radius:50%; background:var(--accent);
+    color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center; padding:0 4px; }
+  .toc .t { flex:1; font-size:14px; line-height:1.4; }
+  .toc .a { color:var(--sub); font-size:12px; flex:0 0 auto; }
+  .phead { margin-bottom:14px; }
+  .pageno { font-size:12px; color:var(--sub); }
+  .pageno .sec { color:var(--accent); font-weight:600; }
+  .pageno .stub { color:var(--accent); font-weight:600; margin-left:8px; }
+  .post h2 { font-size:22px; line-height:1.4; margin:6px 0 8px; }
+  .meta { display:flex; flex-wrap:wrap; gap:10px; color:var(--sub); font-size:13px; align-items:center; }
+  .author { font-weight:600; color:#444; }
+  .gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:6px 0 16px; }
+  .gallery .shot { width:100%; border-radius:12px; cursor:zoom-in; background:var(--chip); display:block; }
+  .desc { font-size:15px; line-height:1.85; white-space:pre-wrap; margin:0 0 14px; color:#2b2f36; }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .tag { background:var(--chip); color:#5a6072; font-size:12px; padding:3px 10px; border-radius:999px; }
+  .footer { display:flex; justify-content:space-between; align-items:center;
+    border-top:1px solid var(--line); padding-top:12px; }
+  .stats { color:var(--sub); font-size:13px; }
+  .src { color:var(--accent); text-decoration:none; font-weight:600; font-size:14px; }
+  #lightbox { position:fixed; inset:0; background:rgba(0,0,0,.88); display:none;
+    align-items:center; justify-content:center; z-index:99; cursor:zoom-out; }
+  #lightbox img { max-width:92vw; max-height:92vh; border-radius:8px; }
+  @media (max-width:560px) { .gallery { grid-template-columns:1fr; } .page { padding:20px 16px; } .toolbar .ttl { max-width:20vw; } }
+  @media print {
+    .toolbar, .secbar { display:none !important; }
+    body { background:#fff; }
+    .stage { max-width:none; padding:0; margin:0; }
+    .page { display:block !important; border:none; box-shadow:none; margin:0;
+      padding:0; border-radius:0; page-break-after:always; }
+    .vishide { display:block !important; }
+    .cover { page-break-after:always; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <span class="ttl">我的小红书收藏 · 代号鸢</span>
+  <button class="flip-only" onclick="prev()">‹ 上一篇</button>
+  <span id="indicator" class="flip-only">封面</span>
+  <button class="flip-only" onclick="next()">下一篇 ›</button>
+  <button id="modeBtn" onclick="toggleMode()">连续浏览</button>
+  <button class="flip-only" onclick="home()">目录</button>
+</div>
+<div class="secbar">
+  <button class="chip active" onclick="setFilter('全部')">全部</button><button class="chip" onclick="setFilter("\u4ee3\u53f7\u9e22")">代号鸢</button>
+</div>
+<main class="stage">
+
+    <section class="page cover" data-i="0" data-section="__cover__">
+      <div class="cover-inner">
+        <div class="badge">小红书收藏 · 归档文档</div>
+        <h1>我的小红书收藏 · 代号鸢</h1>
+        <div class="cmeta">共 8 篇 · 生成于 2026-07-23 08:55</div>
+        
+        <div class="ctip">← → 翻页 · 点目录直达 · 顶部按「分区」筛选 · 右上角可切「连续浏览」· 打印即存为 PDF</div>
+        <nav class="toc">
+          <div class="toc-h">目录（按分区）</div>
+          <div class="toc-sec"><div class="toc-sec-h"><span>代号鸢</span><span class="cnt">8 篇</span></div><ol><li><a href="#" onclick="jumpTo(1)"><span class="num">1</span><span class="t">【老广存档】爹咱一定要走精神病路线吗？</span><span class="a">Sopii</span></a></li><li><a href="#" onclick="jumpTo(2)"><span class="num">2</span><span class="t">陈纪有时也会看着别人家的明艳小妻子晃神</span><span class="a">卑微狗皇帝闭门思过</span></a></li><li><a href="#" onclick="jumpTo(3)"><span class="num">3</span><span class="t">至此，张邈的人设，安稳落地，落地生花</span><span class="a">特洛伊胖木马</span></a></li><li><a href="#" onclick="jumpTo(4)"><span class="num">4</span><span class="t">无tag不想引发争论记录一点想法</span><span class="a">亥时雾</span></a></li><li><a href="#" onclick="jumpTo(5)"><span class="num">5</span><span class="t">鸟，你有如此权威的文案怎么样都会成功的</span><span class="a">天杀的我要报官</span></a></li><li><a href="#" onclick="jumpTo(6)"><span class="num">6</span><span class="t">时至今日我们仍不知道鸟的文案到底多有文华</span><span class="a">天杀的我要报官</span></a></li><li><a href="#" onclick="jumpTo(7)"><span class="num">7</span><span class="t">细思极恐 满宠没否认自己是抓心哥</span><span class="a">小红薯635157C4</span></a></li><li><a href="#" onclick="jumpTo(8)"><span class="num">8</span><span class="t">广陵王是满宠的观音土.</span><span class="a">小红薯635157C4</span></a></li></ol></div>
+        </nav>
+      </div>
+    </section>
+        <section class="page" data-i="1" data-section="代号鸢">
+          <article class="post">
+            <div class="phead">
+              <span class="pageno">第 1 / 8 篇 · <span class="sec">代号鸢</span><span class="stub">⚠ 内容需登录查看</span></span>
+              <h2>【老广存档】爹咱一定要走精神病路线吗？</h2>
+              <div class="meta">
+                <span class="author">Sopii</span>
+                
+                
+              </div>
+            </div>
+            <div class="gallery"></div>
+            <p class="desc">（该笔记需登录态才能查看,或原分享链接已失效。可加 --cookie 重新抓取,或用新的分享链接。）</p>
+            
+            <div class="footer">
+              <span class="stats"></span>
+              <a class="src" href="https://www.xiaohongshu.com/explore/69ca7b83000000001f007a57" target="_blank" rel="noopener">查看原帖 ↗</a>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" data-i="2" data-section="代号鸢">
+          <article class="post">
+            <div class="phead">
+              <span class="pageno">第 2 / 8 篇 · <span class="sec">代号鸢</span></span>
+              <h2>陈纪有时也会看着别人家的明艳小妻子晃神</h2>
+              <div class="meta">
+                <span class="author">卑微狗皇帝闭门思过</span>
+                
+                <span class="date">1775213482000</span>
+              </div>
+            </div>
+            <div class="gallery"><img class="shot" src="images/69cf9baa000000001d01a6f9_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69cf9baa000000001d01a6f9_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <p class="desc">这个逆来顺受的男人的目光会一次又一次地被明艳古灵精怪的女性吸引
+	
+陈纪跟荀夫人定情在蒹葭丛，他想出门透风广恰巧也带他去了蒹葭丛；
+陈纪从前会跟妻子一起说笑，被礼教逼得一度想要投.井，但是瞧见为了看他一眼在门口蹦蹦跳跳的小亲王还是忍不住笑起来。
+陈纪人生像密不透风的围城，这样的女性掠过他的生命，给他带来短暂的风和希望。如果荀夫人还在大概会是个和年轻姑娘很合得来的可爱长辈，她不在了陈纪也忍不住同这个像他妻子的小姑娘多给一颗糖。
+	
+又忍不住把张角拿过来做对比（）两个老男人光看立绘就有几分相像。外号也都有一个贤字。但是性格却天差地别，大贤良师看着温柔实际上主见志向都非常人所及，但是圣贤就像一根随风飘摇的芦苇
+*
+失去妻子后的陈纪走在街上看到一个神采奕奕的女孩子从面前叽叽喳喳奔过去，把他的眼神也一同勾走。
+多么鲜妍灵动……青春年少啊。他不禁痴痴盯着看。想起了自己的少年往事，一时看得出神。旁边传过来两声轻咳，陈纪收回了目光。才发现身边坐了一个跟他年龄相仿的中年男人。
+	
+“抱歉，”陈纪意识到自己的失态，“您女儿？”
+“我妻子。”张角已经见多了这种场面，平静作答。毕竟妻子比自己年轻许多，性格又明媚大胆，有些孩子气。常有人认错也不足为奇。
+	
+但这是他第一次见到一个人能有这么大的反应。
+陈纪双眼圆睁，似乎很是惊讶。过了许久男人脸上意外的神情又变成了一种微妙浓郁的艳羡。陈纪的眼神反复在女孩和男人间流转，带着一丝落寞收敛了目光。
+“真好，”熟悉的明艳可爱，熟悉的称谓，但这一切却都与他无关了。
+	
+万千言语化作一声叹息：
+“我没有你那么幸运。”
+#不要欺负老头[话题]#
+#代号鸢[话题]# #代号鸢陈纪[话题]# #代号鸢张角[话题]#</p>
+            <div class="tags"><span class="tag">#不要欺负老头</span><span class="tag">#代号鸢</span><span class="tag">#代号鸢陈纪</span><span class="tag">#代号鸢张角</span></div>
+            <div class="footer">
+              <span class="stats">❤️ 3139 · ⭐ 368 · 💬 78 · 🔗 86</span>
+              <a class="src" href="https://www.xiaohongshu.com/explore/69cf9baa000000001d01a6f9" target="_blank" rel="noopener">查看原帖 ↗</a>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" data-i="3" data-section="代号鸢">
+          <article class="post">
+            <div class="phead">
+              <span class="pageno">第 3 / 8 篇 · <span class="sec">代号鸢</span></span>
+              <h2>至此，张邈的人设，安稳落地，落地生花</h2>
+              <div class="meta">
+                <span class="author">特洛伊胖木马</span>
+                
+                <span class="date">1774928882000</span>
+              </div>
+            </div>
+            <div class="gallery"><img class="shot" src="images/69cb375f0000000022027c35_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69cb375f0000000022027c35_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <p class="desc">从&quot;国本&quot;剧情开始，我就知道张邈要死了。设定一个人理智与私欲的冲突，往往需要设定他的言行不一。
+	
+从一开始他就不想选她，所有的条件都不符合这个乱世，感觉会变成「三子之局」的炮灰吧。可是小金鱼太耀眼了，她总是能推开所有的阻碍，即便所有人都劝她不要再前进了，她听后也只会说：谢谢你，可我想看看这条路的尽头，我先走了。
+	
+个人非常喜欢最后一段，双方明面上的手段已经全部用尽了，不存在让不让的问题，也都算出了对方能出的所有招数。可是一个死活不肯下杀手，一个死活不肯断掉对方所有的后手。双方都知道对方的私心，也都认定了对方不会用最没道德的杀招。
+	
+没办法啊，人终归是没办法做到绝对的理智。说了一百遍，不能赌，不能赌，可还是想把自己的理想寄托在这个人身上。她很聪明，她很善良，她托举百姓，她把道德放在前位。这样的一个人难道不应该当天下共主吗？自己年轻时所追逐的理想不就是这样吗。难道就因为仁德的人难以在乱世存活，就要说仁德的君主是错的吗？那颗快要熄灭的心火终究还是替他做了选择，留一条路吧，如果她能走到这里，那就把自己的性命当做最后的赌注。
+	
+比白月光狠的是死去的白月光，而比死去的白月光还要歹毒的便是亲手杀死的白月光。
+	
+张邈用自己的命，给他真心选择的主公施加了一个永远也无法解除的诅咒。每当心软的时候，想想那个月光下的小舟吧。有一个人，他流着泪抬头，牵着你的手附上他的脖颈。他在求你，求你带上他的遗志去完成那个共同的理想，不要在路上计较代价，不要在杀人时顾虑自己的痛苦，因为最初的代价，他已经替你支付了。
+	
+#代号鸢[话题]# #代号鸢邈广[话题]#</p>
+            <div class="tags"><span class="tag">#代号鸢</span><span class="tag">#代号鸢邈广</span></div>
+            <div class="footer">
+              <span class="stats">❤️ 5560 · ⭐ 850 · 💬 178 · 🔗 359</span>
+              <a class="src" href="https://www.xiaohongshu.com/explore/69cb375f0000000022027c35" target="_blank" rel="noopener">查看原帖 ↗</a>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" data-i="4" data-section="代号鸢">
+          <article class="post">
+            <div class="phead">
+              <span class="pageno">第 4 / 8 篇 · <span class="sec">代号鸢</span></span>
+              <h2>无tag不想引发争论记录一点想法</h2>
+              <div class="meta">
+                <span class="author">亥时雾</span>
+                
+                <span class="date">1774960068000</span>
+              </div>
+            </div>
+            <div class="gallery"><img class="shot" src="images/69cbbdc4000000001a02a5cb_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <p class="desc">大鸟剧情看完真的觉得这对父女太像了，当年小白带走的的亏是哥哥，要带走的是本王，小白估计得吓死。
+父女两人玩弄人心都是一把好手，邪恶老广对世人是逗弄，哪怕他真的挺喜欢小白，他也会恶劣的逗弄她，给她希望和假象，享受她摧毁精神过程；小广更会包容，会爱也不吝啬爱，但也掩饰不了透出来的上位者的凉薄，这点在傅融和袁基这次剧情都有体现。大小广一见面真是相似的人一碰见就嗅出味了，小广根本不吃老广营造的温情气氛。
+从男主角度说，能明显感觉到女主对五个男主是亲疏有别的，刘辩和左慈最亲近，其他三个都是其实属于见色起意且有利用价值，这三个情人极具代表性，孙策是悍将有兵权，个性不愿意臣服他人，但在感情上倒是忠诚好控制，正好弥补了小广缺少的兵；袁基四世三公，门徒遍地，但并不想取而代之，只愿为臣，没有妨碍自己反而弥补了小广缺少的势；傅融这边更是妙上加妙，前期是连饮食起居都伺候到位的贤内助，成了司马懿后，就是被自己控住心神的敌对势力首领，以后篱笆花做任何决定傅融都会纠结痛苦，挣扎绝望，每一个针对绣衣楼的决定都是对傅融本人的精神凌迟。对于把死对头彻底睡服了这件事我觉得小广应该是爽到灵魂升天。
+看到有其他博主猜想七载是广陵王没能在主线杀了张邈而是自己溺亡的if线，这确实合理解释了为什么小鸟不同步主线，先过七载剧情才能加深主线广陵王杀张邈的合理性。但矛盾点在大鸟新主线的剧情上船前傅融已经掉马了，结果七载里傅融没有回篱笆花反而带着绣衣楼残部到处跑，两人重逢后还是傅融，如果时间线真的是这个顺序的话也是一种仙品了，七载的这个傅融可细品了。
+说偏题了，想到哪说哪了[捂脸R]，居然觉得小广和老广的相似的原因，是提到小白从隐鸢阁山门台阶上摔下来落入老广怀抱的画面，感觉和小广之前给跪着的少妇披披风说出让夫人受累是本王的过错的行为画风真的有一种异曲同工的神似，周瑜就完全不是这画风，张邈可以作证小鲶鱼小金鱼两个外号得到不同结果。父女俩PUA人的手段也是神似，袁基那段互杀父母，老广对简雍种种，感觉小狐狸倾向以温情引诱，老狐狸比较直接变态，但真的像的很妙，难怪父女相看两厌，真能说绝对亲生的。
+作为玩家我惊觉我到底是该把自己代入小广感受一把上位者的爽，还是该代入小白我只是一个被广的表象魅力迷惑的现代傻瓜，老广当年是不是也以小广现在的仁厚表现出现在小白面前迷惑了同为现代人的她？毕竟小广要是男的，我也想当广陵王妃[暗中观察R]</p>
+            
+            <div class="footer">
+              <span class="stats">❤️ 5280 · ⭐ 940 · 💬 148 · 🔗 473</span>
+              <a class="src" href="https://www.xiaohongshu.com/explore/69cbbdc4000000001a02a5cb" target="_blank" rel="noopener">查看原帖 ↗</a>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" data-i="5" data-section="代号鸢">
+          <article class="post">
+            <div class="phead">
+              <span class="pageno">第 5 / 8 篇 · <span class="sec">代号鸢</span></span>
+              <h2>鸟，你有如此权威的文案怎么样都会成功的</h2>
+              <div class="meta">
+                <span class="author">天杀的我要报官</span>
+                
+                <span class="date">1745493709000</span>
+              </div>
+            </div>
+            <div class="gallery"><img class="shot" src="images/680a1ecd000000001c004063_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_2.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_3.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_4.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <p class="desc">嘿嘿嘿梦入浮生快上啦在这里做个这个大活的判词考究，0个人会不喜欢鸟这次活动的文案
+	
+·鸟这里的“薄祚寒门”应当是化用《红楼梦》里贾雨村所说的“纵再偶生于薄祚寒门，断不能为走卒健仆，甘遭人驱制驾驭，必为奇优名倡”，他提出有一种人是正邪二气搏击掀发后，注入其灵魂，结果就一身秉正邪二气，这种人即使生于薄祚寒门，也不会甘遭人驱制驾驭，很显然孙策就是这样正邪两赋的人，他也是《红楼梦》中所说的“其聪俊灵秀之气，则在万万人之上；其乖僻邪谬不近人情之态，又在万万人之下”。
+	
+·“朝也干戈，暮也干戈”化用汤式《天香引•西湖感旧》，尾句“今日南柯”正与鸟这回活动的“浮生入梦相联系。“万骑临江貔虎噪”则化用戴复古的《满江红·赤壁怀古》，非常贴切地描绘出吴蜀联军的高昂士气，写出了火攻曹军时的翻江倒海之势。
+	
+·“居高位者驳诡怀私，其下必多鬼蜮伎俩”化用的是柳宗元《惩咎赋》中的“上睢盱而混茫兮，下驳诡而怀私，白话翻译一下是居上位者对事情模糊不清，那么下属也会歪曲事实、心怀私心，在这里被改成了身居高位的人如果喜欢强词夺理、歪曲事实并且心怀私心，那么他的下属必定会经常使用阴险狡诈、暗中害人的手段，二者意思没有明显的变化，说人话就是上梁不正下梁歪。
+	
+·“天赐这般憾恨机缘，我自不肯休”化用的是关汉卿《一枝花·不伏老》中的“天赐与我这几般儿歹症候，尚兀自不肯休”，写的特别好啊建议大家都去看一看，这是关给自己写的自传，得意的不是自己会四书五经、唐诗宋词，而是民间这一套“乱七八糟”的东西，颠覆了旧有的文人的正统价值观，和张岱的“好精舍、好美婢、好娈童”有相似，但内里不同，不过都不是那种正大的好，是纨绔子弟的那种好。好得有点儿赖皮。
+	
+· “命里无时，偏强求”很显然化用的是“命里有时终须有，命里无时莫强求”，马革裹尸相信大家大都是从语文课上学到的“青山处处埋忠骨，何须马革裹尸还”，在这里就不详细叙述了。
+	
+考究不易，请多多关心吧🥰，点赞收藏关注，助力下一期文案考究
+	
+#如鸢[话题]# #如鸢孙策[话题]##广陵王[话题]# #如鸢梦入浮生[话题]# #孙策梦入浮生[话题]#</p>
+            <div class="tags"><span class="tag">#如鸢</span><span class="tag">#如鸢孙策</span><span class="tag">#广陵王</span><span class="tag">#如鸢梦入浮生</span><span class="tag">#孙策梦入浮生</span></div>
+            <div class="footer">
+              <span class="stats">❤️ 2345 · ⭐ 579 · 💬 42 · 🔗 148</span>
+              <a class="src" href="https://www.xiaohongshu.com/explore/680a1ecd000000001c004063" target="_blank" rel="noopener">查看原帖 ↗</a>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" data-i="6" data-section="代号鸢">
+          <article class="post">
+            <div class="phead">
+              <span class="pageno">第 6 / 8 篇 · <span class="sec">代号鸢</span></span>
+              <h2>时至今日我们仍不知道鸟的文案到底多有文华</h2>
+              <div class="meta">
+                <span class="author">天杀的我要报官</span>
+                
+                <span class="date">1745667104000</span>
+              </div>
+            </div>
+            <div class="gallery"><img class="shot" src="images/680cc420000000001b03acfa_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <p class="desc">梦入浮生中孙策不懂的经文实际化用于后文广提出的《南华经》
+是经文嘛其实不是，《南华经》的另一个名字就是我们耳熟能详的《庄子》
+“一啄一饮”的原句在《红楼梦》当中出现过，原句是“一啄一饮系生成，何必梦中说醒”（鸟你的文案真的很喜欢《红楼梦》）
+终究其源化用的是《庄子》中“泽雉十步一啄，百步一饮，不蕲畜乎樊中。神虽王，不善也”的典故
+翻译一下就是“草泽里的野鸡走十步才啄到一口食，走百步才饮到一口水，但它并不祈求被养在笼里。在笼中神态虽然旺盛，但并不自在”
+而这就是一种因果论宿命说
+意思是就连吃饭喝水这样的小事，也是由先前的因缘决定的
+广在讲因果，而孙策说自己不懂
+其实的确如此，孙策在为广求神拜佛之前是完全不信因果报应这类东西的
+而遇到广后，却跪地求王母
+细想一下这两者之间的区别后我只想说孙策你真的别太爱了
+#如鸢[话题]# #广陵王[话题]# #如鸢梦入浮生[话题]# #如鸢孙策[话题]#</p>
+            <div class="tags"><span class="tag">#如鸢</span><span class="tag">#广陵王</span><span class="tag">#如鸢梦入浮生</span><span class="tag">#如鸢孙策</span></div>
+            <div class="footer">
+              <span class="stats">❤️ 1976 · ⭐ 519 · 💬 23 · 🔗 47</span>
+              <a class="src" href="https://www.xiaohongshu.com/explore/680cc420000000001b03acfa" target="_blank" rel="noopener">查看原帖 ↗</a>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" data-i="7" data-section="代号鸢">
+          <article class="post">
+            <div class="phead">
+              <span class="pageno">第 7 / 8 篇 · <span class="sec">代号鸢</span></span>
+              <h2>细思极恐 满宠没否认自己是抓心哥</h2>
+              <div class="meta">
+                <span class="author">小红薯635157C4</span>
+                
+                <span class="date">1726132330000</span>
+              </div>
+            </div>
+            <div class="gallery"><img class="shot" src="images/66e2b06a0000000012013c4e_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66e2b06a0000000012013c4e_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66e2b06a0000000012013c4e_2.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <p class="desc">抓了胃是真的，没办法反驳，抓了心也是真的…
+	
+首先，嘴上说着“别用新规矩管老员工不坐班不打卡”的满宠，怎么被广陵王一句“袁遗死了你就回去坐班”给拿捏了，根本就是她要是开口你不想坐班也回去坐班了，冷脸洗内裤东汉末年版。
+	
+其次，蹲一边跟一堆兵大头吃饭也不忘记关心广陵王这边在聊什么是吧，笑得吃饭都呛到了哎哟萌物姨姨亲亲亲亲。 都那么暧昧了你还不生气你心里在想什么呢在想你们都是情人关系没事哒没事哒我跟她可是天下第一友人吗
+	
+然后，满宠你真的很受宠你真的非常得广陵王信任，女有阿蝉男有满宠，十分宠爱你俩共分八斗其余人等只能抢二斗，看扬州密信是当你面也能看的
+	
+而且提前准备好的埋袁遗的坑估计也是满宠挖的吧，广陵王在一边批公文，满宠抡铲子说：挖太早了，袁遗不会甘心的。广陵王想了想，说：没事，可以埋别人，你看刘繇怎么样？满宠又下一铲：那得再挖大点，然后补充：埋张邈正好。
+	
+下水捞太守印绶的时候张邈肯定说他是病人不能碰水，广陵王一寻思，有道理，于是去看满宠，满宠说：又不是我要当山阳太守，自己去捞。广陵王心说也对，满宠身上还有跟刘繇打架留的伤呢，正打算解外袍呢那边噗通一声已经下水了。
+	
+再然后，你俩那段讨论刘繇安排刺客的计谋，我真不敢想象满宠怎么一步一步从袁氏的死士变成广陵王的判官，字是没人教过的书是没读过的破计攒局是有脑子的是能跟广陵王这等人聊得有来有回的，快送满宠去读书啊别耽误了！！
+	
+还有跟刘繇对峙时候你们这个默契，往后一撤步满宠就出手，是知道满宠会出手所以要腾个地方的对吧对吧这默契。。。我说满广金婚…
+	
+还有还有刘繇那句“那个黑脸的往旁边让一让你碍眼了”，已知对满宠的形容一直都是“苍白”“白如瓷偶”，那么我们可得：
+1.满宠现在是死人脸plus，2.满宠还在履行保卫广陵王的责任（虽然他的卖身契里只说了当密探没说当楼主护卫但是保护好盆友嘛天经地义的啦）3.老哥你真的让了，天底下没有完美的东西满宠belike指着广陵王是吧我真的笑死了，广陵王那句“啊真的让了”也好好品啊，有种认为满宠不会让的失策感，广陵王没想到吧你太小看你最不动声色的激推的觉悟了。刘繇，欣赏可以，冒犯不行。感觉要是广陵王没有自己出手跟刘繇打，满宠的战绩上又要再加一条暴扣汉室亲王2.0了
+（。。好像已经暴扣过了，你说对吧，满宠的铁尺）
+#代号鸢[话题]# #代号鸢满宠[话题]# #满广[话题]#</p>
+            <div class="tags"><span class="tag">#代号鸢</span><span class="tag">#代号鸢满宠</span><span class="tag">#满广</span></div>
+            <div class="footer">
+              <span class="stats">❤️ 2607 · ⭐ 382 · 💬 83 · 🔗 87</span>
+              <a class="src" href="https://www.xiaohongshu.com/explore/66e2b06a0000000012013c4e" target="_blank" rel="noopener">查看原帖 ↗</a>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" data-i="8" data-section="代号鸢">
+          <article class="post">
+            <div class="phead">
+              <span class="pageno">第 8 / 8 篇 · <span class="sec">代号鸢</span></span>
+              <h2>广陵王是满宠的观音土.</h2>
+              <div class="meta">
+                <span class="author">小红薯635157C4</span>
+                
+                <span class="date">1723997103000</span>
+              </div>
+            </div>
+            <div class="gallery"><img class="shot" src="images/66c21baf0000000025030cd0_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_2.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_3.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_4.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_5.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <p class="desc">结结实实咽下去了、盛在胃袋里，坠得有千斤重，但就是这样一团混合了胃液的黏糊糊的东西，不能教他饱腹。
+只能教他越发饥饿。
+	
+满宠是不怕死的，但他怕饿。
+	
+—
+第一次登上广陵王马车的那天，他肚子里是一把土。满宠只记得饵饼，食盒盖，食盒盖砸在她脑门上说不上闷也说不上脆的响，那时候可能是真的饿得没力气了，那么几下没给她带走，还是该说她命大？
+	
+广陵王后来评价他是仇富厌世，满宠没否认。自己这张比死了三天还白的、不做表情的恶鬼面皮之下，可不就是嫉世愤俗。
+	
+大概也就是这么些个情绪吧，追着这点情绪穷根知底是吃饱了没事干的人才长吁短叹玩的矫情。
+	
+但总之日子也是一天两天渐渐好过起来了，吃饱了，就容易想心事。
+	
+满宠坐在黄沙道旁，低头把蹭上伤口的沙砾随手抹开了，然后先是想：这一个瞬间，好像自己跟那些马车里的仍然是同种动物，或者说马车里的跟自己是同一种动物。
+再是想：怎么还没来。
+	
+广陵王的车马停在身后时，掀起的尘把他好容易挑干净的伤口又浇了个灰扑扑，满宠看了一眼，没在意，揭帘登车。其实登上她的车马的次数也算屈指可数，大多时候天各一方，连她近来的状况也只能知道大概，个中细节无从得知，而传来的消息真假参半。
+	
+满宠不觉得这种状况不令人满意，毕竟乱世之中能朝夕相伴的只有一个土坑埋着的两个人、兴许还要被挖出来吃了进不同人的肚子。
+	
+满宠一面从肉里剜出密报，一面忽而愣了愣：他为什么想和广陵王朝夕相伴？
+	
+他不怕死，但也还没到想死的时候。
+	
+广陵王更不用说了，虽然什么阴魂凝什么什么的说得溜，其实是刀捅进她肉里拔都拔不出来了爬也要爬出十里地说我觉得我还能再抢救一下的那一类人。
+	
+是如果不是汉室宗亲、一定会跟他一起偷粮的那一类人。
+广陵王从袖子里摸出药瓶，一罐接一罐，问：“怎么走神了？在想什么？”
+	
+满宠拿走最小的那一瓶：“只要这个，剩下的体积太大藏进肉里不方便。”
+#代号鸢[话题]# #代号鸢满宠[话题]# #满广[话题]#</p>
+            <div class="tags"><span class="tag">#代号鸢</span><span class="tag">#代号鸢满宠</span><span class="tag">#满广</span></div>
+            <div class="footer">
+              <span class="stats">❤️ 1481 · ⭐ 278 · 💬 61 · 🔗 34</span>
+              <a class="src" href="https://www.xiaohongshu.com/explore/66c21baf0000000025030cd0" target="_blank" rel="noopener">查看原帖 ↗</a>
+            </div>
+          </article>
+        </section>
+</main>
+<div id="lightbox" onclick="this.style.display='none'"><img id="lb-img" src=""></div>
+<script>
+  var allPages = Array.from(document.querySelectorAll('.page'));
+  var curFilter = '全部';
+  var pos = 0;
+  var mode = 'flip';
+  function visibleList() {
+    if (curFilter === '全部') return allPages;
+    return allPages.filter(function(p) { return p.dataset.section === curFilter; });
+  }
+  function render() {
+    var vis = visibleList();
+    if (pos >= vis.length) pos = vis.length - 1;
+    if (pos < 0) pos = 0;
+    allPages.forEach(function(p) { p.classList.remove('active'); p.classList.add('vishide'); });
+    vis.forEach(function(p) { p.classList.remove('vishide'); });
+    if (mode === 'flip') {
+      var cur = vis[pos];
+      if (cur) cur.classList.add('active');
+    }
+    var ind = document.getElementById('indicator');
+    var curp = vis[pos];
+    if (!curp) ind.textContent = '';
+    else if (curFilter === '全部' && (+curp.dataset.i) === 0) ind.textContent = '封面';
+    else ind.textContent = (pos + 1) + ' / ' + vis.length;
+    if (mode === 'flip') window.scrollTo({ top:0, behavior:'smooth' });
+  }
+  function show(i) {
+    var vis = visibleList();
+    var idx = vis.findIndex(function(p) { return (+p.dataset.i) === i; });
+    if (idx >= 0) { pos = idx; render(); }
+  }
+  function prev() { if (mode === 'flip') { pos--; render(); } }
+  function next() { if (mode === 'flip') { pos++; render(); } }
+  function jumpTo(i) { setFilter('全部'); var vis = visibleList(); var idx = vis.findIndex(function(p) { return (+p.dataset.i) === i; }); pos = idx; render(); }
+  function setFilter(f) {
+    curFilter = f;
+    document.querySelectorAll('.chip').forEach(function(c) { c.classList.toggle('active', c.textContent === f); });
+    pos = 0; render();
+  }
+  function home() { setFilter('全部'); pos = 0; render(); }
+  function toggleMode() {
+    mode = (mode === 'flip') ? 'scroll' : 'flip';
+    document.body.classList.toggle('mode-scroll', mode === 'scroll');
+    document.getElementById('modeBtn').textContent = (mode === 'flip') ? '连续浏览' : '翻阅模式';
+    render();
+  }
+  function openLightbox(src) {
+    document.getElementById('lb-img').src = src;
+    document.getElementById('lightbox').style.display = 'flex';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (mode !== 'flip') return;
+    if (e.key === 'ArrowLeft') prev();
+    if (e.key === 'ArrowRight') next();
+  });
+  render();
+</script>
+</body>
+</html>
