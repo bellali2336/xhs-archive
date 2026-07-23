@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>我的小红书收藏 · 代号鸢</title>
+<title>我的小红书收藏</title>
 <style>
   :root {
     --bg:#f4f4f6; --paper:#fff; --ink:#1f2329; --sub:#8a8f99;
@@ -73,7 +73,37 @@
   #lightbox { position:fixed; inset:0; background:rgba(0,0,0,.88); display:none;
     align-items:center; justify-content:center; z-index:99; cursor:zoom-out; }
   #lightbox img { max-width:92vw; max-height:92vh; border-radius:8px; }
-  @media (max-width:560px) { .gallery { grid-template-columns:1fr; } .page { padding:20px 16px; } .toolbar .ttl { max-width:20vw; } }
+  /* ===== 全屏首页 hero ===== */
+  .hero { position:relative; min-height:100vh; min-height:100svh; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .hero-bg { position:absolute; inset:0; background:#2b2f36 center/cover no-repeat; transition:background-image .8s ease; }
+  .hero-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,.55)); }
+  .hero-content { position:relative; text-align:center; color:#fff; padding:24px; max-width:680px; }
+  .hero-badge { display:inline-block; font-size:13px; letter-spacing:2px; background:rgba(255,255,255,.18);
+    padding:6px 16px; border-radius:999px; margin-bottom:18px; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
+  .hero-title { font-size:46px; line-height:1.2; margin:0 0 14px; font-weight:800; letter-spacing:1px;
+    text-shadow:0 2px 18px rgba(0,0,0,.4); }
+  .hero-sub { font-size:16px; opacity:.92; margin-bottom:18px; }
+  .hero-secs { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:26px; }
+  .hero-secs .chip { background:rgba(255,255,255,.16); color:#fff; border-color:transparent; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
+  .hero-secs .chip.active, .hero-secs .chip:hover { background:#fff; color:#1f2329; }
+  .hero-btn { font:inherit; font-size:16px; font-weight:700; color:#1f2329; background:#fff; border:none;
+    padding:13px 32px; border-radius:999px; cursor:pointer; box-shadow:0 10px 28px rgba(0,0,0,.28); transition:transform .15s; }
+  .hero-btn:hover { transform:translateY(-2px); }
+  .hero-credit { position:absolute; bottom:12px; right:14px; font-size:11px; color:rgba(255,255,255,.6); }
+  @media (max-width:560px) {
+    .gallery { grid-template-columns:1fr; }
+    .page { padding:20px 16px; }
+    .toolbar .ttl { max-width:42vw; }
+    .toolbar { flex-wrap:wrap; row-gap:8px; }
+    .toolbar button { font-size:12px; padding:5px 10px; }
+    #indicator { min-width:48px; }
+    .hero { min-height:90vh; min-height:90svh; }
+    .hero-title { font-size:30px; }
+    .hero-sub { font-size:14px; }
+    .hero-btn { font-size:15px; padding:12px 26px; }
+    .secbar { padding:8px 12px; }
+    .chip { font-size:12px; padding:5px 12px; }
+  }
   @media print {
     .toolbar, .secbar { display:none !important; }
     body { background:#fff; }
@@ -86,8 +116,21 @@
 </style>
 </head>
 <body>
-<div class="toolbar">
-  <span class="ttl">我的小红书收藏 · 代号鸢</span>
+
+    <header class="hero">
+      <div class="hero-bg" id="heroBg"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">小红书收藏 · 归档</div>
+        <h1 class="hero-title">我的小红书收藏</h1>
+        <div class="hero-sub">共 8 篇 · 生成于 2026-07-23 10:53</div>
+        <div class="hero-secs"><button class="chip active" onclick="setFilter('全部');scrollToReader()">全部</button><button class="chip" onclick="setFilter("\u4ee3\u53f7\u9e22");scrollToReader()">代号鸢</button></div>
+        <button class="hero-btn" onclick="scrollToReader()">开始阅读 ↓</button>
+      </div>
+      <div class="hero-credit">壁纸每日自动切换</div>
+    </header>
+<div class="toolbar" id="toolbar">
+  <span class="ttl">我的小红书收藏</span>
   <button class="flip-only" onclick="prev()">‹ 上一篇</button>
   <span id="indicator" class="flip-only">封面</span>
   <button class="flip-only" onclick="next()">下一篇 ›</button>
@@ -102,8 +145,8 @@
     <section class="page cover" data-i="0" data-section="__cover__">
       <div class="cover-inner">
         <div class="badge">小红书收藏 · 归档文档</div>
-        <h1>我的小红书收藏 · 代号鸢</h1>
-        <div class="cmeta">共 8 篇 · 生成于 2026-07-23 08:55</div>
+        <h1>我的小红书收藏</h1>
+        <div class="cmeta">共 8 篇 · 生成于 2026-07-23 10:53</div>
         
         <div class="ctip">← → 翻页 · 点目录直达 · 顶部按「分区」筛选 · 右上角可切「连续浏览」· 打印即存为 PDF</div>
         <nav class="toc">
@@ -395,6 +438,19 @@
 </main>
 <div id="lightbox" onclick="this.style.display='none'"><img id="lb-img" src=""></div>
 <script>
+  var WALLS = ["wallpapers/w01.jpg", "wallpapers/w02.jpg", "wallpapers/w03.jpg", "wallpapers/w04.jpg", "wallpapers/w05.jpg", "wallpapers/w06.jpg", "wallpapers/w07.jpg", "wallpapers/w08.jpg", "wallpapers/w09.jpg", "wallpapers/w10.jpg", "wallpapers/w11.jpg", "wallpapers/w12.jpg", "wallpapers/w13.jpg", "wallpapers/w14.jpg"];
+  (function() {
+    if (!WALLS.length) return;
+    var start = new Date(new Date().getFullYear(), 0, 0);
+    var doy = Math.floor((Date.now() - start.getTime()) / 86400000);
+    var el = document.getElementById('heroBg');
+    if (el) el.style.backgroundImage = "url('" + WALLS[doy % WALLS.length] + "')";
+  })();
+  function scrollToReader() {
+    var t = document.getElementById('toolbar');
+    if (t) t.scrollIntoView({ behavior:'smooth' });
+    else window.scrollTo({ top:0, behavior:'smooth' });
+  }
   var allPages = Array.from(document.querySelectorAll('.page'));
   var curFilter = '全部';
   var pos = 0;
