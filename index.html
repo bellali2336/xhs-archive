@@ -67,7 +67,8 @@
   .meta { display:flex; flex-wrap:wrap; gap:10px; color:var(--sub); font-size:13px; align-items:center; }
   .author { font-weight:600; color:#444; }
   .gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:6px 0 16px; }
-  .gallery .shot { width:100%; border-radius:12px; cursor:zoom-in; background:var(--chip); display:block; }
+  .gallery .shot { width:100%; border-radius:12px; cursor:zoom-in; background:#eef1f5; display:block; min-height:80px; }
+  .gallery .shot.err { cursor:pointer; box-shadow:inset 0 0 0 1px #e2e6ea; }
   .desc { font-size:15px; line-height:1.85; white-space:pre-wrap; margin:0 0 14px; color:#2b2f36; }
   .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
   .tag { background:var(--chip); color:#5a6072; font-size:12px; padding:3px 10px; border-radius:999px; }
@@ -128,7 +129,7 @@
       <div class="hero-content">
         <div class="hero-badge">小红书收藏 · 归档</div>
         <h1 class="hero-title">我的小红书收藏</h1>
-        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 12:50</div>
+        <div class="hero-sub">共 12 篇 · 生成于 2026-07-23 13:41</div>
         <div class="hero-secs"><button class="chip chip-parent active" data-val="全部" onclick="setParent('全部')">全部</button><button class="chip chip-parent" data-val="代号鸢" onclick="setParent('代号鸢')">代号鸢</button><button class="chip chip-parent" data-val="陆沉" onclick="setParent('陆沉')">陆沉</button>
           <div class="hero-children" id="heroChildren" style="display:none"></div>
         </div>
@@ -154,7 +155,7 @@
       <div class="cover-inner">
         <div class="badge">小红书收藏 · 归档文档</div>
         <h1>我的小红书收藏</h1>
-        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 12:50</div>
+        <div class="cmeta">共 12 篇 · 生成于 2026-07-23 13:41</div>
         <div class="cmeta2">分区：代号鸢 11 · 陆沉 1</div>
         <div class="ctip">← → 翻页 · 点目录直达 · 顶部按「分区」筛选 · 右上角可切「连续浏览」· 打印即存为 PDF</div>
         <nav class="toc">
@@ -174,7 +175,7 @@
                 <span class="date">1774851000000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69ca13b8000000001a028a0b_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_2.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_3.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_4.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_5.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_6.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_7.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_8.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/69ca13b8000000001a028a0b_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_5.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_6.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_7.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_8.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">“还以为袁基长大后能继承那种美貌”
 “她能想到的、想不到的，其实前人都想过、写过成文的经典，也拿命或者国运试过
 ”早上起床说女大和早八不共戴天。中午说真是吃人的时代。晚上嫌弃我封建。吃夜宵时候说自己是小皇帝。“
@@ -202,7 +203,7 @@
                 <span class="date">1774883388000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69ca923c000000002301c7a6_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/69ca923c000000002301c7a6_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">（接前情提要）
 广陵王从陶谦彭城处返回广陵，孙策领兵围攻广陵，吕蒙对外守城。
 孙策叛变袁术，带来消息：袁绍和曹操想要拿下徐州，袁术提前截胡。
@@ -245,7 +246,7 @@
                 <span class="date">1771293158000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/6993c9e6000000001a035b3d_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/6993c9e6000000001a035b3d_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">其实一开始看到春晚舞台上那棵绿色大树的时候，内心是惊喜的，建木是《山海经》神话体系浓墨重彩的一笔。
 据《山海经》记载，建木其实是一棵活着的天梯。《海内经》记载它“青叶紫茎，玄华黄实，百仞无枝，有九欘，下有九枸”，伏羲曾攀着它上下天庭，“大皞爰过，黄帝所为”。《吕氏春秋·有始》说它立于天地之中，“白民之南，建木之下，日中无影，呼而无响，盖天地之中也”。《淮南子·墬形训》亦言“建木在都广，众帝所自上下”。它就是那个连接——让神可以降临，让人可以飞升。但后来，树断了。《尚书·吕刑》用四个字记载了那场巨变：“绝地天通”。《国语·楚语》释其缘由：古者“民神杂糅，不可方物”，夫人作享，家为巫史，直至颛顼“命南正重司天以属神，命火正黎司地以属民”，斩断建木，使复旧常。从此神归神道，人归人路，世间再无垂下的天梯。
 这就是“斩建木、诛十巫”的源头。在《代号鸢》的世界里，建木由上古生灵周天驹砸入地底后生长而成，它的根系化作了黄金剑，果实孕育了最初的十巫。十巫的权杖取自它的枝干，十巫的记忆与情感都流淌在它的年轮里——它不仅是神树，更是这个世界的“硬盘”，是神与巫共用的记忆之树。当“绝地天通”降临，建木被斩断，十巫被杀，人与神的联系彻底隔绝。而在“天下隐光”中所指“建木根系”，正是这棵古树的残骸——那蠕动的根系不再是圣物，而是被遗忘的历史本身，在幽暗中喘息，成为这个世界里最深的秘密。
@@ -272,7 +273,7 @@
                 <span class="date">1770692129000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/698a9e21000000001d011a9f_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/698a9e21000000001d011a9f_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">她扁扁的趴在我怀里嘀咕那面落地窗把她压成了两块扁扁的雪饼。她总在结束后出现很多天马行空的想象，刚和她在一起时不清楚这些话其实是她表达喜欢的另一种方式，还因此闹过一些我因为焦虑而试图依靠外界因素来辅助爱人关系和谐的办法的笑话。比如，听一些看似经验丰富的朋友的热情指导。比如，看一些极有可能恋爱经历为零的撰写人写的无用建议。再比如，压抑自己，然后在某天无意间发现她的需求最终打败了她其实本就多余的道德——她拥有了某些只有我不在时才会出现在家里的玩具。
 说来其实还是我恶劣。如果不是那个因为太想她而提前结束行程早归的晚上，我大概率也不会发现和我说完晚安挂断电话之后的她，原来还会有那么多需要一遍遍叫着我的名字而做的事。被发现的时候她脸上的红还未褪去，有一点狼狈但更多却只是让我好几次獠牙漏头的可爱。她反复解释着不是我想的那个样子，却又因为太慌张而误触了好几次玩具的开关，涕泗横流。
 直到那天之后，我才终于读懂了她那些话背后的含义。
@@ -323,7 +324,7 @@
                 <span class="date">1775213482000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69cf9baa000000001d01a6f9_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69cf9baa000000001d01a6f9_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/69cf9baa000000001d01a6f9_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69cf9baa000000001d01a6f9_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">这个逆来顺受的男人的目光会一次又一次地被明艳古灵精怪的女性吸引
 	
 陈纪跟荀夫人定情在蒹葭丛，他想出门透风广恰巧也带他去了蒹葭丛；
@@ -365,7 +366,7 @@
                 <span class="date">1774928882000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69cb375f0000000022027c35_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69cb375f0000000022027c35_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/69cb375f0000000022027c35_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69cb375f0000000022027c35_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">从&quot;国本&quot;剧情开始，我就知道张邈要死了。设定一个人理智与私欲的冲突，往往需要设定他的言行不一。
 	
 从一开始他就不想选她，所有的条件都不符合这个乱世，感觉会变成「三子之局」的炮灰吧。可是小金鱼太耀眼了，她总是能推开所有的阻碍，即便所有人都劝她不要再前进了，她听后也只会说：谢谢你，可我想看看这条路的尽头，我先走了。
@@ -398,7 +399,7 @@
                 <span class="date">1774960068000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69cbbdc4000000001a02a5cb_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/69cbbdc4000000001a02a5cb_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">大鸟剧情看完真的觉得这对父女太像了，当年小白带走的的亏是哥哥，要带走的是本王，小白估计得吓死。
 父女两人玩弄人心都是一把好手，邪恶老广对世人是逗弄，哪怕他真的挺喜欢小白，他也会恶劣的逗弄她，给她希望和假象，享受她摧毁精神过程；小广更会包容，会爱也不吝啬爱，但也掩饰不了透出来的上位者的凉薄，这点在傅融和袁基这次剧情都有体现。大小广一见面真是相似的人一碰见就嗅出味了，小广根本不吃老广营造的温情气氛。
 从男主角度说，能明显感觉到女主对五个男主是亲疏有别的，刘辩和左慈最亲近，其他三个都是其实属于见色起意且有利用价值，这三个情人极具代表性，孙策是悍将有兵权，个性不愿意臣服他人，但在感情上倒是忠诚好控制，正好弥补了小广缺少的兵；袁基四世三公，门徒遍地，但并不想取而代之，只愿为臣，没有妨碍自己反而弥补了小广缺少的势；傅融这边更是妙上加妙，前期是连饮食起居都伺候到位的贤内助，成了司马懿后，就是被自己控住心神的敌对势力首领，以后篱笆花做任何决定傅融都会纠结痛苦，挣扎绝望，每一个针对绣衣楼的决定都是对傅融本人的精神凌迟。对于把死对头彻底睡服了这件事我觉得小广应该是爽到灵魂升天。
@@ -424,7 +425,7 @@
                 <span class="date">1745493709000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/680a1ecd000000001c004063_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_2.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_3.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_4.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/680a1ecd000000001c004063_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">嘿嘿嘿梦入浮生快上啦在这里做个这个大活的判词考究，0个人会不喜欢鸟这次活动的文案
 	
 ·鸟这里的“薄祚寒门”应当是化用《红楼梦》里贾雨村所说的“纵再偶生于薄祚寒门，断不能为走卒健仆，甘遭人驱制驾驭，必为奇优名倡”，他提出有一种人是正邪二气搏击掀发后，注入其灵魂，结果就一身秉正邪二气，这种人即使生于薄祚寒门，也不会甘遭人驱制驾驭，很显然孙策就是这样正邪两赋的人，他也是《红楼梦》中所说的“其聪俊灵秀之气，则在万万人之上；其乖僻邪谬不近人情之态，又在万万人之下”。
@@ -459,7 +460,7 @@
                 <span class="date">1745667104000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/680cc420000000001b03acfa_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/680cc420000000001b03acfa_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">梦入浮生中孙策不懂的经文实际化用于后文广提出的《南华经》
 是经文嘛其实不是，《南华经》的另一个名字就是我们耳熟能详的《庄子》
 “一啄一饮”的原句在《红楼梦》当中出现过，原句是“一啄一饮系生成，何必梦中说醒”（鸟你的文案真的很喜欢《红楼梦》）
@@ -491,7 +492,7 @@
                 <span class="date">1726132330000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/66e2b06a0000000012013c4e_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66e2b06a0000000012013c4e_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66e2b06a0000000012013c4e_2.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/66e2b06a0000000012013c4e_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66e2b06a0000000012013c4e_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66e2b06a0000000012013c4e_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">抓了胃是真的，没办法反驳，抓了心也是真的…
 	
 首先，嘴上说着“别用新规矩管老员工不坐班不打卡”的满宠，怎么被广陵王一句“袁遗死了你就回去坐班”给拿捏了，根本就是她要是开口你不想坐班也回去坐班了，冷脸洗内裤东汉末年版。
@@ -531,7 +532,7 @@
                 <span class="date">1723997103000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/66c21baf0000000025030cd0_0.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_1.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_2.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_3.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_4.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_5.jpg" loading="lazy" onclick="openLightbox(this.src)" alt="图片"></div>
+            <div class="gallery"><img class="shot" src="images/66c21baf0000000025030cd0_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_5.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
             <p class="desc">结结实实咽下去了、盛在胃袋里，坠得有千斤重，但就是这样一团混合了胃液的黏糊糊的东西，不能教他饱腹。
 只能教他越发饥饿。
 	
@@ -674,6 +675,22 @@
   function openLightbox(src) {
     document.getElementById('lb-img').src = src;
     document.getElementById('lightbox').style.display = 'flex';
+  }
+  function imgFail(el) {
+    var tries = el.dataset.tries ? parseInt(el.dataset.tries, 10) : 0;
+    if (tries >= 2) {
+      el.classList.add('err');
+      el.alt = '图片加载失败，点此重试';
+      el.onclick = function(e) {
+        if (window.lbOpen) return;
+        e.stopPropagation();
+        el.dataset.tries = 0; el.classList.remove('err');
+        el.src = el.src.split('?')[0] + '?r=' + Date.now();
+      };
+      return;
+    }
+    el.dataset.tries = tries + 1;
+    setTimeout(function() { el.src = el.src.split('?')[0] + '?r=' + Date.now(); }, 1500);
   }
   document.addEventListener('keydown', function(e) {
     if (mode !== 'flip') return;
