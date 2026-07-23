@@ -66,7 +66,7 @@
   .post h2 { font-size:22px; line-height:1.4; margin:6px 0 8px; }
   .meta { display:flex; flex-wrap:wrap; gap:10px; color:var(--sub); font-size:13px; align-items:center; }
   .author { font-weight:600; color:#444; }
-  .gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:6px 0 16px; }
+  .gallery { display:block; margin:6px 0 16px; }
   .gallery .shot { width:100%; border-radius:12px; cursor:zoom-in; background:#eef1f5; display:block; min-height:80px; }
   .gallery .shot.err { cursor:pointer; box-shadow:inset 0 0 0 1px #e2e6ea; }
   .desc { font-size:15px; line-height:1.85; white-space:pre-wrap; margin:0 0 14px; color:#2b2f36; }
@@ -98,6 +98,7 @@
   .hero-credit { position:absolute; bottom:12px; right:14px; font-size:11px; color:rgba(255,255,255,.6); }
   @media (max-width:560px) {
     .gallery { grid-template-columns:1fr; }
+    .gal-rest { grid-template-columns:1fr; }
     .page { padding:20px 16px; }
     .toolbar .ttl { max-width:42vw; }
     .toolbar { flex-wrap:wrap; row-gap:8px; }
@@ -119,9 +120,32 @@
     .vishide { display:block !important; }
     .cover { page-break-after:always; }
   }
+  /* ===== 新增: 进度条 / 暗色 / 封面头图 / 杂志图库 / 搜索 ===== */
+  #progress { position:fixed; top:0; left:0; height:3px; width:0; background:var(--accent);
+    z-index:60; transition:width .25s ease; }
+  body.dark { --bg:#16181d; --paper:#1e2128; --ink:#e9ebef; --sub:#9aa1ac;
+    --line:#2b2f38; --chip:#262a32; --accent:#ff4d63; }
+  body.dark .toolbar, body.dark .secbar { background:rgba(30,33,40,.92); }
+  body.dark .cover { background:var(--paper); }
+  body.dark .toc { background:var(--chip); }
+  body.dark .hero-overlay { background:linear-gradient(180deg, rgba(0,0,0,.5), rgba(0,0,0,.72)); }
+  body.dark .gallery .shot { background:#2a2e36; }
+  body.dark .desc { color:#cdd1d8; }
+  body.dark .author { color:#d6d9df; }
+  body.dark .tag { color:#aeb4c0; }
+  .post .cover-img { width:100%; max-height:340px; object-fit:cover; border-radius:14px;
+    margin-bottom:14px; cursor:zoom-in; display:block; background:#eef1f5; }
+  .gal-rest { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:6px 0 16px; }
+  .toolbar input.search { font:inherit; font-size:13px; padding:6px 12px; border-radius:999px;
+    border:1px solid var(--line); background:#fff; color:var(--ink); min-width:160px; }
+  body.dark .toolbar input.search { background:#2a2e36; color:#e9ebef; }
+  .toolbar button#darkBtn { font:inherit; font-size:15px; border:1px solid var(--line);
+    background:#fff; color:var(--ink); padding:5px 10px; border-radius:999px; cursor:pointer; }
+  body.dark .toolbar button#darkBtn { background:#2a2e36; }
 </style>
 </head>
 <body>
+<div id="progress"></div>
 
     <header class="hero">
       <div class="hero-bg" id="heroBg"></div>
@@ -129,7 +153,7 @@
       <div class="hero-content">
         <div class="hero-badge">小红书收藏 · 归档</div>
         <h1 class="hero-title">我的小红书收藏</h1>
-        <div class="hero-sub">共 13 篇 · 生成于 2026-07-23 14:31</div>
+        <div class="hero-sub">共 14 篇 · 生成于 2026-07-23 17:10</div>
         <div class="hero-secs"><button class="chip chip-parent active" data-val="全部" onclick="setParent('全部')">全部</button><button class="chip chip-parent" data-val="代号鸢" onclick="setParent('代号鸢')">代号鸢</button><button class="chip chip-parent" data-val="陆沉" onclick="setParent('陆沉')">陆沉</button>
           <div class="hero-children" id="heroChildren" style="display:none"></div>
         </div>
@@ -139,6 +163,8 @@
     </header>
 <div class="toolbar" id="toolbar">
   <span class="ttl">我的小红书收藏</span>
+  <input class="search" id="search" type="search" placeholder="搜索标题/作者/标签…" oninput="doSearch(this.value)">
+  <button id="darkBtn" onclick="toggleDark()" title="切换暗色/亮色">🌙</button>
   <button class="flip-only" onclick="prev()">‹ 上一篇</button>
   <span id="indicator" class="flip-only">封面</span>
   <button class="flip-only" onclick="next()">下一篇 ›</button>
@@ -155,19 +181,19 @@
       <div class="cover-inner">
         <div class="badge">小红书收藏 · 归档文档</div>
         <h1>我的小红书收藏</h1>
-        <div class="cmeta">共 13 篇 · 生成于 2026-07-23 14:31</div>
-        <div class="cmeta2">分区：代号鸢 12 · 陆沉 1</div>
+        <div class="cmeta">共 14 篇 · 生成于 2026-07-23 17:10</div>
+        <div class="cmeta2">分区：代号鸢 13 · 陆沉 1</div>
         <div class="ctip">← → 翻页 · 点目录直达 · 顶部按「分区」筛选 · 右上角可切「连续浏览」· 打印即存为 PDF</div>
         <nav class="toc">
           <div class="toc-h">目录（按分区）</div>
-          <div class="toc-sec"><div class="toc-sec-h"><span>代号鸢</span><span class="cnt">12 篇</span></div><div class="toc-sub"><div class="toc-sub-h">同人 <span class="cnt">4 篇</span></div><ol><li><a href="#" onclick="jumpTo(1)"><span class="num">1</span><span class="t">周瑜是睡在屏风后面的</span><span class="a">章鱼的事情你少管</span></a></li><li><a href="#" onclick="jumpTo(7)"><span class="num">7</span><span class="t">陈纪有时也会看着别人家的明艳小妻子晃神</span><span class="a">卑微狗皇帝闭门思过</span></a></li><li><a href="#" onclick="jumpTo(12)"><span class="num">12</span><span class="t">细思极恐 满宠没否认自己是抓心哥</span><span class="a">小红薯635157C4</span></a></li><li><a href="#" onclick="jumpTo(13)"><span class="num">13</span><span class="t">广陵王是满宠的观音土.</span><span class="a">小红薯635157C4</span></a></li></ol></div><div class="toc-sub"><div class="toc-sub-h">解析 <span class="cnt">8 篇</span></div><ol><li><a href="#" onclick="jumpTo(2)"><span class="num">2</span><span class="t">和老广的这段月下对谈可以封神了</span><span class="a">誰來假裝妥協心不對口</span></a></li><li><a href="#" onclick="jumpTo(3)"><span class="num">3</span><span class="t">一张图了解代号鸢三周年在讲什么</span><span class="a">灼爻</span></a></li><li><a href="#" onclick="jumpTo(4)"><span class="num">4</span><span class="t">一棵神树的起源、演变与新生</span><span class="a">爱穿老式布鞋</span></a></li><li><a href="#" onclick="jumpTo(6)"><span class="num">6</span><span class="t">【老广存档】爹咱一定要走精神病路线吗？</span><span class="a">Sopii</span></a></li><li><a href="#" onclick="jumpTo(8)"><span class="num">8</span><span class="t">至此，张邈的人设，安稳落地，落地生花</span><span class="a">特洛伊胖木马</span></a></li><li><a href="#" onclick="jumpTo(9)"><span class="num">9</span><span class="t">无tag不想引发争论记录一点想法</span><span class="a">亥时雾</span></a></li><li><a href="#" onclick="jumpTo(10)"><span class="num">10</span><span class="t">鸟，你有如此权威的文案怎么样都会成功的</span><span class="a">天杀的我要报官</span></a></li><li><a href="#" onclick="jumpTo(11)"><span class="num">11</span><span class="t">时至今日我们仍不知道鸟的文案到底多有文华</span><span class="a">天杀的我要报官</span></a></li></ol></div></div><div class="toc-sec"><div class="toc-sec-h"><span>陆沉</span><span class="cnt">1 篇</span></div><ol><li><a href="#" onclick="jumpTo(5)"><span class="num">5</span><span class="t">她扁扁的趴在我怀里嘀咕那面落地窗把她压成了两块扁扁的雪饼。她总在结束后出现很多天</span><span class="a">Hummingbird</span></a></li></ol></div>
+          <div class="toc-sec"><div class="toc-sec-h"><span>代号鸢</span><span class="cnt">13 篇</span></div><div class="toc-sub"><div class="toc-sub-h">同人 <span class="cnt">4 篇</span></div><ol><li><a href="#" onclick="jumpTo(1)"><span class="num">1</span><span class="t">周瑜是睡在屏风后面的</span><span class="a">章鱼的事情你少管</span></a></li><li><a href="#" onclick="jumpTo(7)"><span class="num">7</span><span class="t">陈纪有时也会看着别人家的明艳小妻子晃神</span><span class="a">卑微狗皇帝闭门思过</span></a></li><li><a href="#" onclick="jumpTo(12)"><span class="num">12</span><span class="t">细思极恐 满宠没否认自己是抓心哥</span><span class="a">小红薯635157C4</span></a></li><li><a href="#" onclick="jumpTo(13)"><span class="num">13</span><span class="t">广陵王是满宠的观音土.</span><span class="a">小红薯635157C4</span></a></li></ol></div><div class="toc-sub"><div class="toc-sub-h">解析 <span class="cnt">9 篇</span></div><ol><li><a href="#" onclick="jumpTo(2)"><span class="num">2</span><span class="t">和老广的这段月下对谈可以封神了</span><span class="a">誰來假裝妥協心不對口</span></a></li><li><a href="#" onclick="jumpTo(3)"><span class="num">3</span><span class="t">一张图了解代号鸢三周年在讲什么</span><span class="a">灼爻</span></a></li><li><a href="#" onclick="jumpTo(4)"><span class="num">4</span><span class="t">一棵神树的起源、演变与新生</span><span class="a">爱穿老式布鞋</span></a></li><li><a href="#" onclick="jumpTo(6)"><span class="num">6</span><span class="t">【老广存档】爹咱一定要走精神病路线吗？</span><span class="a">Sopii</span></a></li><li><a href="#" onclick="jumpTo(8)"><span class="num">8</span><span class="t">至此，张邈的人设，安稳落地，落地生花</span><span class="a">特洛伊胖木马</span></a></li><li><a href="#" onclick="jumpTo(9)"><span class="num">9</span><span class="t">无tag不想引发争论记录一点想法</span><span class="a">亥时雾</span></a></li><li><a href="#" onclick="jumpTo(10)"><span class="num">10</span><span class="t">鸟，你有如此权威的文案怎么样都会成功的</span><span class="a">天杀的我要报官</span></a></li><li><a href="#" onclick="jumpTo(11)"><span class="num">11</span><span class="t">时至今日我们仍不知道鸟的文案到底多有文华</span><span class="a">天杀的我要报官</span></a></li><li><a href="#" onclick="jumpTo(14)"><span class="num">14</span><span class="t">云广——致死量的姐狗文学（吃美了）</span><span class="a">AAA篱笆花高级园艺师小林</span></a></li></ol></div></div><div class="toc-sec"><div class="toc-sec-h"><span>陆沉</span><span class="cnt">1 篇</span></div><ol><li><a href="#" onclick="jumpTo(5)"><span class="num">5</span><span class="t">她扁扁的趴在我怀里嘀咕那面落地窗把她压成了两块扁扁的雪饼。她总在结束后出现很多天</span><span class="a">Hummingbird</span></a></li></ol></div>
         </nav>
       </div>
     </section>
-        <section class="page" data-i="1" data-section="代号鸢-同人">
+        <section class="page" data-i="1" data-section="代号鸢-同人" data-search="周瑜是睡在屏风后面的 章鱼的事情你少管 随笔 周瑜 代号鸢周瑜 亡鸟回忆录 绣衣楼 瑜广">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 1 / 13 篇 · <span class="sec">代号鸢-同人</span></span>
+              <span class="pageno">第 1 / 14 篇 · <span class="sec">代号鸢-同人</span></span>
               <h2>周瑜是睡在屏风后面的</h2>
               <div class="meta">
                 <span class="author">章鱼的事情你少管</span>
@@ -175,7 +201,8 @@
                 <span class="date">1737894511000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/67962a6f000000001703be3d_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/67962a6f000000001703be3d_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/67962a6f000000001703be3d_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/67962a6f000000001703be3d_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"><div class="gal-rest"><img class="shot" src="images/67962a6f000000001703be3d_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/67962a6f000000001703be3d_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div></div>
             <p class="desc">周瑜是睡在屏风后面的。
 大家都是办公累了就随便一趴一躺把书房变成大通铺，但哥哪怕累得要猝死了也依旧会摇摇晃晃扶着桌沿站起来去屏风后面睡，要说穷讲究吧平日里比他更甚的大有人在，唉所以细细一想感觉像特殊待遇……
 还有他那个头发，虽然不像有几位一样编得繁复，但精细度还是在的，如果要躺下睡觉，怎么也是要先拆了簪子的。起来后他又不像那个谁和那个谁一样，可以落拓不羁的出现在众人面前，那也得在屏风后面重新挽发——就是说有没有一种可能，会被人认错呢？
@@ -204,10 +231,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="2" data-section="代号鸢-解析">
+        <section class="page" data-i="2" data-section="代号鸢-解析" data-search="和老广的这段月下对谈可以封神了 誰來假裝妥協心不對口 代号鸢 如鸢">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 2 / 13 篇 · <span class="sec">代号鸢-解析</span></span>
+              <span class="pageno">第 2 / 14 篇 · <span class="sec">代号鸢-解析</span></span>
               <h2>和老广的这段月下对谈可以封神了</h2>
               <div class="meta">
                 <span class="author">誰來假裝妥協心不對口</span>
@@ -215,7 +242,8 @@
                 <span class="date">1774851000000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69ca13b8000000001a028a0b_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_5.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_6.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_7.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_8.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/69ca13b8000000001a028a0b_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"><div class="gal-rest"><img class="shot" src="images/69ca13b8000000001a028a0b_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_5.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_6.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_7.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69ca13b8000000001a028a0b_8.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div></div>
             <p class="desc">“还以为袁基长大后能继承那种美貌”
 “她能想到的、想不到的，其实前人都想过、写过成文的经典，也拿命或者国运试过
 ”早上起床说女大和早八不共戴天。中午说真是吃人的时代。晚上嫌弃我封建。吃夜宵时候说自己是小皇帝。“
@@ -232,10 +260,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="3" data-section="代号鸢-解析">
+        <section class="page" data-i="3" data-section="代号鸢-解析" data-search="一张图了解代号鸢三周年在讲什么 灼爻 代号鸢 如鸢 哭海无涯如鸢是岸 傅融 代号鸢袁绍 代号鸢三周年">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 3 / 13 篇 · <span class="sec">代号鸢-解析</span></span>
+              <span class="pageno">第 3 / 14 篇 · <span class="sec">代号鸢-解析</span></span>
               <h2>一张图了解代号鸢三周年在讲什么</h2>
               <div class="meta">
                 <span class="author">灼爻</span>
@@ -243,7 +271,8 @@
                 <span class="date">1774883388000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69ca923c000000002301c7a6_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/69ca923c000000002301c7a6_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"></div>
             <p class="desc">（接前情提要）
 广陵王从陶谦彭城处返回广陵，孙策领兵围攻广陵，吕蒙对外守城。
 孙策叛变袁术，带来消息：袁绍和曹操想要拿下徐州，袁术提前截胡。
@@ -275,10 +304,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="4" data-section="代号鸢-解析">
+        <section class="page" data-i="4" data-section="代号鸢-解析" data-search="一棵神树的起源、演变与新生 爱穿老式布鞋 春晚 如鸢 代号鸢 山海经 吉量 建木 绣衣楼好饭吃到年">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 4 / 13 篇 · <span class="sec">代号鸢-解析</span></span>
+              <span class="pageno">第 4 / 14 篇 · <span class="sec">代号鸢-解析</span></span>
               <h2>一棵神树的起源、演变与新生</h2>
               <div class="meta">
                 <span class="author">爱穿老式布鞋</span>
@@ -286,7 +315,8 @@
                 <span class="date">1771293158000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/6993c9e6000000001a035b3d_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/6993c9e6000000001a035b3d_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"></div>
             <p class="desc">其实一开始看到春晚舞台上那棵绿色大树的时候，内心是惊喜的，建木是《山海经》神话体系浓墨重彩的一笔。
 据《山海经》记载，建木其实是一棵活着的天梯。《海内经》记载它“青叶紫茎，玄华黄实，百仞无枝，有九欘，下有九枸”，伏羲曾攀着它上下天庭，“大皞爰过，黄帝所为”。《吕氏春秋·有始》说它立于天地之中，“白民之南，建木之下，日中无影，呼而无响，盖天地之中也”。《淮南子·墬形训》亦言“建木在都广，众帝所自上下”。它就是那个连接——让神可以降临，让人可以飞升。但后来，树断了。《尚书·吕刑》用四个字记载了那场巨变：“绝地天通”。《国语·楚语》释其缘由：古者“民神杂糅，不可方物”，夫人作享，家为巫史，直至颛顼“命南正重司天以属神，命火正黎司地以属民”，斩断建木，使复旧常。从此神归神道，人归人路，世间再无垂下的天梯。
 这就是“斩建木、诛十巫”的源头。在《代号鸢》的世界里，建木由上古生灵周天驹砸入地底后生长而成，它的根系化作了黄金剑，果实孕育了最初的十巫。十巫的权杖取自它的枝干，十巫的记忆与情感都流淌在它的年轮里——它不仅是神树，更是这个世界的“硬盘”，是神与巫共用的记忆之树。当“绝地天通”降临，建木被斩断，十巫被杀，人与神的联系彻底隔绝。而在“天下隐光”中所指“建木根系”，正是这棵古树的残骸——那蠕动的根系不再是圣物，而是被遗忘的历史本身，在幽暗中喘息，成为这个世界里最深的秘密。
@@ -302,10 +332,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="5" data-section="陆沉">
+        <section class="page" data-i="5" data-section="陆沉" data-search="她扁扁的趴在我怀里嘀咕那面落地窗把她压成了两块扁扁的雪饼。她总在结束后出现很多天 hummingbird 陆沉">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 5 / 13 篇 · <span class="sec">陆沉</span></span>
+              <span class="pageno">第 5 / 14 篇 · <span class="sec">陆沉</span></span>
               <h2>她扁扁的趴在我怀里嘀咕那面落地窗把她压成了两块扁扁的雪饼。她总在结束后出现很多天</h2>
               <div class="meta">
                 <span class="author">Hummingbird</span>
@@ -313,7 +343,8 @@
                 <span class="date">1770692129000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/698a9e21000000001d011a9f_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/698a9e21000000001d011a9f_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"></div>
             <p class="desc">她扁扁的趴在我怀里嘀咕那面落地窗把她压成了两块扁扁的雪饼。她总在结束后出现很多天马行空的想象，刚和她在一起时不清楚这些话其实是她表达喜欢的另一种方式，还因此闹过一些我因为焦虑而试图依靠外界因素来辅助爱人关系和谐的办法的笑话。比如，听一些看似经验丰富的朋友的热情指导。比如，看一些极有可能恋爱经历为零的撰写人写的无用建议。再比如，压抑自己，然后在某天无意间发现她的需求最终打败了她其实本就多余的道德——她拥有了某些只有我不在时才会出现在家里的玩具。
 说来其实还是我恶劣。如果不是那个因为太想她而提前结束行程早归的晚上，我大概率也不会发现和我说完晚安挂断电话之后的她，原来还会有那么多需要一遍遍叫着我的名字而做的事。被发现的时候她脸上的红还未褪去，有一点狼狈但更多却只是让我好几次獠牙漏头的可爱。她反复解释着不是我想的那个样子，却又因为太慌张而误触了好几次玩具的开关，涕泗横流。
 直到那天之后，我才终于读懂了她那些话背后的含义。
@@ -332,10 +363,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="6" data-section="代号鸢-解析">
+        <section class="page" data-i="6" data-section="代号鸢-解析" data-search="【老广存档】爹咱一定要走精神病路线吗？ sopii ">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 6 / 13 篇 · <span class="sec">代号鸢-解析</span><span class="stub">⚠ 内容需登录查看</span></span>
+              <span class="pageno">第 6 / 14 篇 · <span class="sec">代号鸢-解析</span><span class="stub">⚠ 内容需登录查看</span></span>
               <h2>【老广存档】爹咱一定要走精神病路线吗？</h2>
               <div class="meta">
                 <span class="author">Sopii</span>
@@ -343,6 +374,7 @@
                 
               </div>
             </div>
+            
             <div class="gallery"></div>
             <p class="desc">（该笔记需登录态才能查看,或原分享链接已失效。可加 --cookie 重新抓取,或用新的分享链接。）</p>
             
@@ -353,10 +385,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="7" data-section="代号鸢-同人">
+        <section class="page" data-i="7" data-section="代号鸢-同人" data-search="陈纪有时也会看着别人家的明艳小妻子晃神 卑微狗皇帝闭门思过 不要欺负老头 代号鸢 代号鸢陈纪 代号鸢张角">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 7 / 13 篇 · <span class="sec">代号鸢-同人</span></span>
+              <span class="pageno">第 7 / 14 篇 · <span class="sec">代号鸢-同人</span></span>
               <h2>陈纪有时也会看着别人家的明艳小妻子晃神</h2>
               <div class="meta">
                 <span class="author">卑微狗皇帝闭门思过</span>
@@ -364,7 +396,8 @@
                 <span class="date">1775213482000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69cf9baa000000001d01a6f9_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69cf9baa000000001d01a6f9_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/69cf9baa000000001d01a6f9_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"><div class="gal-rest"><img class="shot" src="images/69cf9baa000000001d01a6f9_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div></div>
             <p class="desc">这个逆来顺受的男人的目光会一次又一次地被明艳古灵精怪的女性吸引
 	
 陈纪跟荀夫人定情在蒹葭丛，他想出门透风广恰巧也带他去了蒹葭丛；
@@ -395,10 +428,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="8" data-section="代号鸢-解析">
+        <section class="page" data-i="8" data-section="代号鸢-解析" data-search="至此，张邈的人设，安稳落地，落地生花 特洛伊胖木马 代号鸢 代号鸢邈广">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 8 / 13 篇 · <span class="sec">代号鸢-解析</span></span>
+              <span class="pageno">第 8 / 14 篇 · <span class="sec">代号鸢-解析</span></span>
               <h2>至此，张邈的人设，安稳落地，落地生花</h2>
               <div class="meta">
                 <span class="author">特洛伊胖木马</span>
@@ -406,7 +439,8 @@
                 <span class="date">1774928882000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69cb375f0000000022027c35_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/69cb375f0000000022027c35_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/69cb375f0000000022027c35_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"><div class="gal-rest"><img class="shot" src="images/69cb375f0000000022027c35_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div></div>
             <p class="desc">从&quot;国本&quot;剧情开始，我就知道张邈要死了。设定一个人理智与私欲的冲突，往往需要设定他的言行不一。
 	
 从一开始他就不想选她，所有的条件都不符合这个乱世，感觉会变成「三子之局」的炮灰吧。可是小金鱼太耀眼了，她总是能推开所有的阻碍，即便所有人都劝她不要再前进了，她听后也只会说：谢谢你，可我想看看这条路的尽头，我先走了。
@@ -428,10 +462,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="9" data-section="代号鸢-解析">
+        <section class="page" data-i="9" data-section="代号鸢-解析" data-search="无tag不想引发争论记录一点想法 亥时雾 ">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 9 / 13 篇 · <span class="sec">代号鸢-解析</span></span>
+              <span class="pageno">第 9 / 14 篇 · <span class="sec">代号鸢-解析</span></span>
               <h2>无tag不想引发争论记录一点想法</h2>
               <div class="meta">
                 <span class="author">亥时雾</span>
@@ -439,7 +473,8 @@
                 <span class="date">1774960068000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/69cbbdc4000000001a02a5cb_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/69cbbdc4000000001a02a5cb_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"></div>
             <p class="desc">大鸟剧情看完真的觉得这对父女太像了，当年小白带走的的亏是哥哥，要带走的是本王，小白估计得吓死。
 父女两人玩弄人心都是一把好手，邪恶老广对世人是逗弄，哪怕他真的挺喜欢小白，他也会恶劣的逗弄她，给她希望和假象，享受她摧毁精神过程；小广更会包容，会爱也不吝啬爱，但也掩饰不了透出来的上位者的凉薄，这点在傅融和袁基这次剧情都有体现。大小广一见面真是相似的人一碰见就嗅出味了，小广根本不吃老广营造的温情气氛。
 从男主角度说，能明显感觉到女主对五个男主是亲疏有别的，刘辩和左慈最亲近，其他三个都是其实属于见色起意且有利用价值，这三个情人极具代表性，孙策是悍将有兵权，个性不愿意臣服他人，但在感情上倒是忠诚好控制，正好弥补了小广缺少的兵；袁基四世三公，门徒遍地，但并不想取而代之，只愿为臣，没有妨碍自己反而弥补了小广缺少的势；傅融这边更是妙上加妙，前期是连饮食起居都伺候到位的贤内助，成了司马懿后，就是被自己控住心神的敌对势力首领，以后篱笆花做任何决定傅融都会纠结痛苦，挣扎绝望，每一个针对绣衣楼的决定都是对傅融本人的精神凌迟。对于把死对头彻底睡服了这件事我觉得小广应该是爽到灵魂升天。
@@ -454,10 +489,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="10" data-section="代号鸢-解析">
+        <section class="page" data-i="10" data-section="代号鸢-解析" data-search="鸟，你有如此权威的文案怎么样都会成功的 天杀的我要报官 如鸢 如鸢孙策 广陵王 如鸢梦入浮生 孙策梦入浮生">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 10 / 13 篇 · <span class="sec">代号鸢-解析</span></span>
+              <span class="pageno">第 10 / 14 篇 · <span class="sec">代号鸢-解析</span></span>
               <h2>鸟，你有如此权威的文案怎么样都会成功的</h2>
               <div class="meta">
                 <span class="author">天杀的我要报官</span>
@@ -465,7 +500,8 @@
                 <span class="date">1745493709000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/680a1ecd000000001c004063_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/680a1ecd000000001c004063_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"><div class="gal-rest"><img class="shot" src="images/680a1ecd000000001c004063_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/680a1ecd000000001c004063_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div></div>
             <p class="desc">嘿嘿嘿梦入浮生快上啦在这里做个这个大活的判词考究，0个人会不喜欢鸟这次活动的文案
 	
 ·鸟这里的“薄祚寒门”应当是化用《红楼梦》里贾雨村所说的“纵再偶生于薄祚寒门，断不能为走卒健仆，甘遭人驱制驾驭，必为奇优名倡”，他提出有一种人是正邪二气搏击掀发后，注入其灵魂，结果就一身秉正邪二气，这种人即使生于薄祚寒门，也不会甘遭人驱制驾驭，很显然孙策就是这样正邪两赋的人，他也是《红楼梦》中所说的“其聪俊灵秀之气，则在万万人之上；其乖僻邪谬不近人情之态，又在万万人之下”。
@@ -489,10 +525,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="11" data-section="代号鸢-解析">
+        <section class="page" data-i="11" data-section="代号鸢-解析" data-search="时至今日我们仍不知道鸟的文案到底多有文华 天杀的我要报官 如鸢 广陵王 如鸢梦入浮生 如鸢孙策">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 11 / 13 篇 · <span class="sec">代号鸢-解析</span></span>
+              <span class="pageno">第 11 / 14 篇 · <span class="sec">代号鸢-解析</span></span>
               <h2>时至今日我们仍不知道鸟的文案到底多有文华</h2>
               <div class="meta">
                 <span class="author">天杀的我要报官</span>
@@ -500,7 +536,8 @@
                 <span class="date">1745667104000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/680cc420000000001b03acfa_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/680cc420000000001b03acfa_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"></div>
             <p class="desc">梦入浮生中孙策不懂的经文实际化用于后文广提出的《南华经》
 是经文嘛其实不是，《南华经》的另一个名字就是我们耳熟能详的《庄子》
 “一啄一饮”的原句在《红楼梦》当中出现过，原句是“一啄一饮系生成，何必梦中说醒”（鸟你的文案真的很喜欢《红楼梦》）
@@ -521,10 +558,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="12" data-section="代号鸢-同人">
+        <section class="page" data-i="12" data-section="代号鸢-同人" data-search="细思极恐 满宠没否认自己是抓心哥 小红薯635157c4 代号鸢 代号鸢满宠 满广">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 12 / 13 篇 · <span class="sec">代号鸢-同人</span></span>
+              <span class="pageno">第 12 / 14 篇 · <span class="sec">代号鸢-同人</span></span>
               <h2>细思极恐 满宠没否认自己是抓心哥</h2>
               <div class="meta">
                 <span class="author">小红薯635157C4</span>
@@ -532,7 +569,8 @@
                 <span class="date">1726132330000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/66e2b06a0000000012013c4e_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66e2b06a0000000012013c4e_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66e2b06a0000000012013c4e_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/66e2b06a0000000012013c4e_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"><div class="gal-rest"><img class="shot" src="images/66e2b06a0000000012013c4e_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66e2b06a0000000012013c4e_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div></div>
             <p class="desc">抓了胃是真的，没办法反驳，抓了心也是真的…
 	
 首先，嘴上说着“别用新规矩管老员工不坐班不打卡”的满宠，怎么被广陵王一句“袁遗死了你就回去坐班”给拿捏了，根本就是她要是开口你不想坐班也回去坐班了，冷脸洗内裤东汉末年版。
@@ -561,10 +599,10 @@
           </article>
         </section>
 
-        <section class="page" data-i="13" data-section="代号鸢-同人">
+        <section class="page" data-i="13" data-section="代号鸢-同人" data-search="广陵王是满宠的观音土. 小红薯635157c4 代号鸢 代号鸢满宠 满广">
           <article class="post">
             <div class="phead">
-              <span class="pageno">第 13 / 13 篇 · <span class="sec">代号鸢-同人</span></span>
+              <span class="pageno">第 13 / 14 篇 · <span class="sec">代号鸢-同人</span></span>
               <h2>广陵王是满宠的观音土.</h2>
               <div class="meta">
                 <span class="author">小红薯635157C4</span>
@@ -572,7 +610,8 @@
                 <span class="date">1723997103000</span>
               </div>
             </div>
-            <div class="gallery"><img class="shot" src="images/66c21baf0000000025030cd0_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_5.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div>
+            <img class="cover-img" src="images/66c21baf0000000025030cd0_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"><div class="gal-rest"><img class="shot" src="images/66c21baf0000000025030cd0_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/66c21baf0000000025030cd0_5.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div></div>
             <p class="desc">结结实实咽下去了、盛在胃袋里，坠得有千斤重，但就是这样一团混合了胃液的黏糊糊的东西，不能教他饱腹。
 只能教他越发饥饿。
 	
@@ -612,6 +651,36 @@
             </div>
           </article>
         </section>
+
+        <section class="page" data-i="14" data-section="代号鸢-解析" data-search="云广——致死量的姐狗文学（吃美了） aaa篱笆花高级园艺师小林 代号鸢 代号鸢赵云 代号鸢云广 鸢云广">
+          <article class="post">
+            <div class="phead">
+              <span class="pageno">第 14 / 14 篇 · <span class="sec">代号鸢-解析</span></span>
+              <h2>云广——致死量的姐狗文学（吃美了）</h2>
+              <div class="meta">
+                <span class="author">AAA篱笆花高级园艺师小林</span>
+                <span class="ip">📍江苏</span>
+                <span class="date">1784776691000</span>
+              </div>
+            </div>
+            <img class="cover-img" src="images/6a6187f30000000011010bac_0.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="封面">
+            <div class="gallery"><div class="gal-rest"><img class="shot" src="images/6a6187f30000000011010bac_1.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/6a6187f30000000011010bac_2.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/6a6187f30000000011010bac_3.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/6a6187f30000000011010bac_4.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/6a6187f30000000011010bac_5.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"><img class="shot" src="images/6a6187f30000000011010bac_6.jpg" loading="lazy" decoding="async" onerror="imgFail(this)" onclick="openLightbox(this.src)" alt="图片"></div></div>
+            <p class="desc">首先鸟卖了大量的云广，还包括云广珊和文广云，不死鸟你懂事了，知道ml才是真理！看完赵云剧情心情分外愉悦[大笑R]剧情内容量很大我挑几个最喜欢的点说。
+p1语音第20条，对应阿珊狠狠刺了赵云心口一刀（物理意义），快没命了但赵云内心只是不解茫然，但第12节末尾广陵王对他说以后会把他看作“敌人”，小小两个字直接让云道心破碎。
+这里对话先看P2P3，云问广，为什么要为他做到这一步（一路守护，多次救命，还有心理咨询），有点像在问“我们现在是什么关系”，结果广说他像故人，他是孩子，他是好人[笑哭了R] 云反驳，广接话说以后不会把他看作孩子，还没开心两秒，是“敌人”[doge]心碎一地的赵子龙[doge]
+P4P5，小云将军的美貌初现端倪，月下美人衣衫半褪（？），光是看着广陵王就很有聊天的欲望，后面文丑认证我们“果然还是喜欢好看的”。在这里云广已经共乘一骑，剧情开头云就知道我们是女的了（珊叫我们“姐姐”）。再后面刘复出场，叫赵云为我们的“小情人”[笑哭了R] 传闻里，赵云来广陵住在王府（“从王府出来的”）发烧还不忘在广陵拉练，结果广陵王又多了桩“欺男霸女”的绯闻哈哈，红着脸从王府跑出来，好像什么纯情小娇夫……
+P6，云广文广珊（？），小说经典绑架戏码，你选哪个男人我就杀了另一个[doge]可惜广陵王啥也不选，连着绑匪一起吃了，我们四个过好生活比啥都好[doge]
+P7云广交心片段，云之前认为我们轻视生死，广陵王一顿话疗，治好了云的误解，他没话说了，我就这个表情：你也很为我啄米吧.JPG[超喜欢R]广陵王/我真的很好！
+整个赵云剧情都很好看，有刘辩出场，但辩广的感情有点复杂，我不太吃这口。还有欺负张郃后来被他杀了的那个义兄什么义复活了，不知道咋回事。
+哎给我看爽了！
+#代号鸢[话题]# #代号鸢赵云[话题]# #代号鸢云广[话题]# #鸢云广[话题]#</p>
+            <div class="tags"><span class="tag">#代号鸢</span><span class="tag">#代号鸢赵云</span><span class="tag">#代号鸢云广</span><span class="tag">#鸢云广</span></div>
+            <div class="footer">
+              <span class="stats">❤️ 431 · ⭐ 37 · 💬 27 · 🔗 56</span>
+              <a class="src" href="https://www.xiaohongshu.com/explore/6a6187f30000000011010bac" target="_blank" rel="noopener">查看原帖 ↗</a>
+            </div>
+          </article>
+        </section>
 </main>
 <div id="lightbox" onclick="this.style.display='none'"><img id="lb-img" src=""></div>
 <script>
@@ -632,6 +701,7 @@
   var CHILDREN = {"代号鸢": ["同人", "解析"]};
   var curParent = '全部';
   var curChild = '__all__';
+  var curSearch = '';
   var pos = 0;
   var mode = 'flip';
   var firstRender = true;
@@ -639,11 +709,18 @@
   function parentOf(sec) { var i = sec.indexOf('-'); return i >= 0 ? sec.slice(0, i) : sec; }
   function childOf(sec) { var i = sec.indexOf('-'); return i >= 0 ? sec.slice(i + 1) : ''; }
   function visibleList() {
+    var q = curSearch;
     return allPages.filter(function(p) {
-      if (curParent === '全部') return true;
-      var sec = p.dataset.section;
-      if (parentOf(sec) !== curParent) return false;
-      if (curChild !== '__all__' && childOf(sec) !== curChild) return false;
+      if (q && (+p.dataset.i) === 0) return false;   // 搜索时隐藏封面
+      if (curParent !== '全部') {
+        var sec = p.dataset.section;
+        if (parentOf(sec) !== curParent) return false;
+        if (curChild !== '__all__' && childOf(sec) !== curChild) return false;
+      }
+      if (q) {
+        var hay = (p.dataset.search || '').toLowerCase();
+        if (hay.indexOf(q) < 0) return false;
+      }
       return true;
     });
   }
@@ -693,6 +770,12 @@
         }
       }
     }
+    var pb = document.getElementById('progress');
+    if (pb) {
+      var n = vis.length;
+      var pct = n <= 1 ? 100 : Math.round((pos / (n - 1)) * 100);
+      pb.style.width = pct + '%';
+    }
   }
   function show(i) {
     var vis = visibleList();
@@ -712,6 +795,35 @@
     document.getElementById('modeBtn').textContent = (mode === 'flip') ? '连续浏览' : '翻阅模式';
     render();
   }
+  function doSearch(v) {
+    curSearch = (v || '').trim().toLowerCase();
+    pos = 0;
+    render();
+  }
+  function toggleDark() {
+    var on = document.body.classList.toggle('dark');
+    var b = document.getElementById('darkBtn');
+    if (b) b.textContent = on ? '☀️' : '🌙';
+    try { localStorage.setItem('xhsDark', on ? '1' : '0'); } catch(e) {}
+  }
+  (function() {
+    try {
+      if (localStorage.getItem('xhsDark') === '1') {
+        document.body.classList.add('dark');
+        var b = document.getElementById('darkBtn');
+        if (b) b.textContent = '☀️';
+      }
+    } catch(e) {}
+  })();
+  window.addEventListener('scroll', function() {
+    if (mode !== 'scroll') return;
+    var pb = document.getElementById('progress');
+    if (!pb) return;
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    pb.style.width = pct + '%';
+  });
   function openLightbox(src) {
     document.getElementById('lb-img').src = src;
     document.getElementById('lightbox').style.display = 'flex';
